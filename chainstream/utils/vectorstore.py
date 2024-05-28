@@ -1,0 +1,31 @@
+import os
+from dotenv import load_dotenv
+from langchain_community.vectorstores import FAISS
+from chainstream.models import embeddings
+
+
+class VectorStore:
+    def __init__(self) -> None:
+        load_dotenv()
+        self.index_path = os.environ.get(
+            "PROJECT_DATA_DIR",
+            os.path.expanduser("~/Downloads/3S-SE-AI/")
+        ) + "vectorstore/primaryindex"
+        self.embeddings = embeddings.load(prefer_cuda=False)
+
+        try:
+            self.index = FAISS.load_local(
+                self.index_path,
+                self.embeddings,
+                allow_dangerous_deserialization=True,
+            )
+        except:
+            self.index = FAISS.from_texts(
+                ["Standard Sharing Software"],
+                self.embeddings,
+            )
+    def save_state(self):
+        try:
+            self.index.save_local(self.index_path)
+        except BaseException as e:
+            print(e)
