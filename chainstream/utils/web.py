@@ -1,5 +1,7 @@
 from typing import List
 import requests
+from urllib.parse import urlparse
+
 
 def related_links(query: str, tool) -> List[str]:
     def string_to_object_array(string):
@@ -43,20 +45,40 @@ def related_links(query: str, tool) -> List[str]:
         return object_array
 
     try:
-        array = string_to_object_array(tool.run(query))
+        if tool.name == "bing_search":
+            print("\n\nConditionTrue\n\n")
+        array = string_to_object_array(
+            tool.run(query, num_results=5 if tool.name == "bing_search" else None)
+        )
         for i, obj in enumerate(array):
             array[i] = obj["link"]
     except BaseException as e:
-        return ["https://python.langchain.com/v0.1/docs/get_started/introduction/"]
+        print(e)
+        return []
     return array
 
+
 def is_pdf_link(url):
-  """Checks if the URL points to a PDF file using Content-Type header."""
-  try:
-    response = requests.head(url)
-    response.raise_for_status()  # Raise an exception for bad status codes
-    content_type = response.headers.get("Content-Type", None)
-    return content_type and content_type.lower() == "application/pdf"
-  except requests.exceptions.RequestException:
-    # Handle potential errors during request
-    return False
+    """Checks if the URL points to a PDF file using Content-Type header."""
+    try:
+        response = requests.head(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        content_type = response.headers.get("Content-Type", None)
+        return content_type and content_type.lower() == "application/pdf"
+    except requests.exceptions.RequestException:
+        # Handle potential errors during request
+        return False
+
+
+def is_youtube_link(url):
+    parsed_url = urlparse(url)
+    return parsed_url.netloc in ("www.youtube.com", "youtube.com") and (
+        parsed_url.path == "/watch" or parsed_url.path.startswith("/playlist")
+    )
+
+
+def is_arxiv_link(url):
+    import urllib.parse
+
+    parsed_url = urllib.parse.urlparse(url)
+    return parsed_url.netloc == "arxiv.org"

@@ -20,6 +20,10 @@ PyMuPDF
 unstructured[all-docs]
 html2text
 playwright
+youtube-transcript-api
+arxiv
+pytube
+pandoc
 beautifulsoup4
 duckduckgo-search
 faiss-cpu
