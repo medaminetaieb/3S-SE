@@ -27,8 +27,8 @@ def demo():
     web_tool_keys = list(config["web_tools"].keys())
     index = deepcopy(st.session_state["vectorstores"][0].index)
     if len(st.session_state["vectorstores"]) > 1:
-        for tmp_index in st.session_state["vectorstores"][1:].index:
-            index.merge_from(tmp_index)
+        for tmp_vs in st.session_state["vectorstores"][1:]:
+            index.merge_from(tmp_vs.index)
     translator = load_t5()
 
     with st.sidebar:
