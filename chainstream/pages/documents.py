@@ -97,11 +97,6 @@ def demo():
                         if tmp is not None:
                             vectorstores[0] = tmp
                             st.session_state["vectorstores"] = vectorstores
-                            vss = st.multiselect(
-                                "Available Vector Stores",
-                                ["_"] + ls(),
-                                default=[vs.index_path.split("/")[-1] for vs in vectorstores],
-                            )
                     except BaseException as e:
                         print(e)
                         st.error("Failed to authenticate", icon="🚨")
@@ -110,16 +105,20 @@ def demo():
 
         if st.button("Save VectorDB state"):
             if vectorstores[0].save_state():
-                st.success('Vectorstore state saved', icon="✅")
+                st.success("Vectorstore state saved", icon="✅")
             else:
                 st.error("Please authenticate your vectorstore first", icon="🚨")
         vss = st.multiselect(
             "Available Vector Stores",
-            ["_"] + ls(),
-            default=[vs.index_path.split("/")[-1] for vs in vectorstores],
+            ls(),
+            default=(
+                []
+                if len(vectorstores) <= 1
+                else [vs.index_path.split("/")[-1] for vs in vectorstores[1:]]
+            ),
         )
         if st.button("Load Vector Stores"):
             vectorstores[:] = vectorstores[:1]
             for name in vss:
                 vectorstores.append(VectorStore(name))
-            st.success('Vector Stores loaded', icon="✅")
+            st.success("Vector Stores loaded", icon="✅")
