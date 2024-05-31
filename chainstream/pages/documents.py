@@ -3,7 +3,7 @@ def demo():
     import logging
     import os
     import streamlit as st
-    from chainstream.utils.vectorstore import VectorStore
+    from chainstream.utils.vectorstore import VectorStore, ls
     from chainstream.utils.documents import (
         from_url,
         from_recursive_url,
@@ -30,9 +30,9 @@ def demo():
         + "app.log",
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
-    if "vectorstore" not in st.session_state:
-        st.session_state["vectorstore"] = VectorStore()
-    vectorstore = st.session_state["vectorstore"]
+    if "vectorstores" not in st.session_state:
+        st.session_state["vectorstores"] = [VectorStore(vs_name="_")]
+    vectorstores = st.session_state["vectorstores"]
     with st.form(key="importdocs"):
         input_urls = st.text_area(
             "Input urls separated by newline",
@@ -84,11 +84,42 @@ def demo():
                     except BaseException as e:
                         logging.error(f"Error processing file: {e}")
             if len(docs) > 0:
-                vectorstore.index.add_documents(docs)
+                vectorstores[0].index.add_documents(docs)
     with st.sidebar:
+        with st.form("auth"):
+            vs_name = st.text_input("VectoStore Name", "")
+            vs_passphrase = st.text_input("VectorStore Passphrase", "", type="password")
+            submitted = st.form_submit_button("Authenticate and Load")
+            if submitted:
+                if len(vs_name) > 0 and len(vs_passphrase) > 0:
+                    try:
+                        tmp = VectorStore(vs_name=vs_name, vs_passphrase=vs_passphrase)
+                        if tmp is not None:
+                            vectorstores[0] = tmp
+                            st.session_state["vectorstores"] = vectorstores
+                            vss = st.multiselect(
+                                "Available Vector Stores",
+                                ["_"] + ls(),
+                                default=[vs.index_path.split("/")[-1] for vs in vectorstores],
+                            )
+                    except BaseException as e:
+                        print(e)
+                        st.error("Failed to authenticate", icon="🚨")
+                else:
+                    st.error("Please enter credentials", icon="🚨")
+
         if st.button("Save VectorDB state"):
-            vectorstore.save_state()
-            st.success('Vectorstore state saved', icon="✅")
-        if st.button("Reload VectorDB from local disk"):
-            vectorstore = VectorStore()
-            st.success('Vectorstore state restored', icon="✅")
+            if vectorstores[0].save_state():
+                st.success('Vectorstore state saved', icon="✅")
+            else:
+                st.error("Please authenticate your vectorstore first", icon="🚨")
+        vss = st.multiselect(
+            "Available Vector Stores",
+            ["_"] + ls(),
+            default=[vs.index_path.split("/")[-1] for vs in vectorstores],
+        )
+        if st.button("Load Vector Stores"):
+            vectorstores[:] = vectorstores[:1]
+            for name in vss:
+                vectorstores.append(VectorStore(name))
+            st.success('Vector Stores loaded', icon="✅")

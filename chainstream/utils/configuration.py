@@ -5,6 +5,7 @@ def load(args={}):
     from langchain_fireworks import ChatFireworks
     from langchain_cohere import ChatCohere
     from langchain_mistralai import ChatMistralAI
+    from langchain_together import ChatTogether
     from chainstream.models.generation import phi3
     from langchain_core.tools import Tool
     from langchain_google_community import GoogleSearchAPIWrapper
@@ -113,6 +114,57 @@ def load(args={}):
                 "model": ChatMistralAI(
                     model="mistral-large-latest",
                     mistral_api_key=args["MISTRAL_API_KEY"],
+                ),
+            }
+        except BaseException as e:
+            print(e)
+    if "TOGETHER_API_KEY" in args:
+        try:
+            config["llms"]["deepseek"] = {
+                "name": "DeepSeek LLM Chat (67B)",
+                "model": ChatTogether(
+                    together_api_key=args["TOGETHER_API_KEY"],
+                    model="deepseek-ai/deepseek-llm-67b-chat",
+                ),
+            }
+        except BaseException as e:
+            print(e)
+        try:
+            config["llms"]["nousresearch"] = {
+                "name": "Nous Capybara v1.9 (7B)",
+                "model": ChatTogether(
+                    together_api_key=args["TOGETHER_API_KEY"],
+                    model="NousResearch/Nous-Capybara-7B-V1p9",
+                ),
+            }
+        except BaseException as e:
+            print(e)
+        try:
+            config["llms"]["qwen"] = {
+                "name": "Qwen 1.5 Chat (110B)",
+                "model": ChatTogether(
+                    together_api_key=args["TOGETHER_API_KEY"],
+                    model="Qwen/Qwen1.5-110B-Chat",
+                ),
+            }
+        except BaseException as e:
+            print(e)
+        try:
+            config["llms"]["redpajama"] = {
+                "name": "RedPajama-INCITE Chat (7B)",
+                "model": ChatTogether(
+                    together_api_key=args["TOGETHER_API_KEY"],
+                    model="togethercomputer/RedPajama-INCITE-7B-Chat",
+                ),
+            }
+        except BaseException as e:
+            print(e)
+        try:
+            config["llms"]["phi2"] = {
+                "name": "Microsoft Phi-2",
+                "model": ChatTogether(
+                    together_api_key=args["TOGETHER_API_KEY"],
+                    model="microsoft/phi-2",
                 ),
             }
         except BaseException as e:

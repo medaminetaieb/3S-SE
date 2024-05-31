@@ -47,6 +47,14 @@ def demo():
                 else os.environ.get("MISTRAL_API_KEY", "")
             ),
         )
+        TOGETHER_API_KEY = st.text_input(
+            label="TOGETHER_API_KEY",
+            value=(
+                args["TOGETHER_API_KEY"]
+                if "TOGETHER_API_KEY" in args
+                else os.environ.get("TOGETHER_API_KEY", "")
+            ),
+        )
         GOOGLE_CSE_ID = st.text_input(
             label="GOOGLE_CSE_ID",
             value=(
@@ -87,8 +95,7 @@ def demo():
                 else os.environ.get("TAVILY_API_KEY", "")
             ),
         )
-        submitted = st.form_submit_button(label="Confirm")
-        if submitted:
+        if st.form_submit_button(label="Confirm"):
             if len(OPENAI_API_KEY) > 0:
                 args["OPENAI_API_KEY"] = OPENAI_API_KEY
             elif "OPENAI_API_KEY" in args:
@@ -109,6 +116,10 @@ def demo():
                 args["MISTRAL_API_KEY"] = MISTRAL_API_KEY
             elif "MISTRAL_API_KEY" in args:
                 del args["MISTRAL_API_KEY"]
+            if len(TOGETHER_API_KEY) > 0:
+                args["TOGETHER_API_KEY"] = TOGETHER_API_KEY
+            elif "TOGETHER_API_KEY" in args:
+                del args["TOGETHER_API_KEY"]
             if len(GOOGLE_CSE_ID) > 0:
                 args["GOOGLE_CSE_ID"] = GOOGLE_CSE_ID
             elif "GOOGLE_CSE_ID" in args:

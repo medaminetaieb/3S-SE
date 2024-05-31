@@ -8,5 +8,5 @@ page_names_to_funcs = {
     "Import documents": documents.demo,
     "Chatbot": chatbot.demo,
 }
-demo_name = st.sidebar.selectbox("Naviagate Pages", page_names_to_funcs.keys())
+demo_name = st.sidebar.selectbox("Navigate Pages", page_names_to_funcs.keys())
 page_names_to_funcs[demo_name]()
