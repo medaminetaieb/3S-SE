@@ -1,7 +1,11 @@
 python-dotenv
 asyncio
 nest_asyncio
+datasets
+pandas
 streamlit
+streamlit-feedback
+ragas
 langchain
 langchain-community
 langchain-anthropic

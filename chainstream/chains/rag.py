@@ -3,13 +3,13 @@ def answer(question: str, llm, vectorstore):
     from chainstream.utils.documents import format_docs
 
     if isinstance(llm, TextGenerationPipeline):
-        context = "\n\n".join([doc.page_content for doc in vectorstore.similarity_search(question)])
+        context = vectorstore.similarity_search(question)
         prompt = [{"role": "user", "content": f"""Use the following pieces of context to answer the question at the end.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
         Use three sentences maximum and keep the answer as concise as possible.
         Always say "thanks for asking!" at the end of the answer.
 
-        {context}
+        {format_docs(context)}
 
         Question: {question}
 
@@ -20,10 +20,12 @@ def answer(question: str, llm, vectorstore):
             "temperature": 0.0,
             "do_sample": False,
         }
-        print("\nRESPONSE BEING GENERATED...\n")
         response = llm(prompt, **generation_args)[0]['generated_text']
-        print("\nRESPONSE GENERATED\n")
-        return response.strip()
+        return {
+            "context": context,
+            "question": question,
+            "answer": response.strip(),
+        }
     else:
         from langchain_core.prompts import PromptTemplate
         from langchain_core.runnables import RunnablePassthrough, RunnableParallel
@@ -53,4 +55,4 @@ def answer(question: str, llm, vectorstore):
                 | StrOutputParser()
             )
         )
-        return chain.invoke(question)["answer"]
+        return chain.invoke(question)

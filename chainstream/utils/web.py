@@ -45,8 +45,6 @@ def related_links(query: str, tool) -> List[str]:
         return object_array
 
     try:
-        if tool.name == "bing_search":
-            print("\n\nConditionTrue\n\n")
         array = string_to_object_array(
             tool.run(query, num_results=5 if tool.name == "bing_search" else None)
         )

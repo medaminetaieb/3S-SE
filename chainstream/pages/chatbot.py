@@ -1,13 +1,16 @@
 def demo():
     import streamlit as st
+    from streamlit_feedback import streamlit_feedback as st_feedback
     from chainstream.models.translation import detect_language, translate, load_t5
     from chainstream.utils import configuration
     from chainstream.chains.rag import answer
     from chainstream.utils.documents import from_url, from_research
     from chainstream.utils.web import related_links
     from chainstream.utils.vectorstore import VectorStore
+    from chainstream.models.ranking import submit_feedback, reranked
     from copy import deepcopy
     import os
+    from uuid import uuid4 as uuid
 
     # If vectorstores are not initialized, redirect to loading documents page
     if "vectorstores" not in st.session_state:
@@ -32,6 +35,7 @@ def demo():
     translator = load_t5()
 
     with st.sidebar:
+        calculate_scores = st.checkbox("Rank Answers")
         llms = st.multiselect(
             "Select LLMs",
             model_options,
@@ -42,25 +46,53 @@ def demo():
             web_tool_options,
             default=None,
         )
+        if "OPENAI_API_KEY" in args and "TAVILY_API_KEY" in args:
+            gptresearcher = st.checkbox("Enable GPTResearcher")
+        use_translator = st.checkbox("Translate across languages")
 
     st.title("💬 3S Chatbot")
 
-    # st.caption("🚀 3S chatbot")
-    def generate_response(input_text):
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = [
+            {
+                "id": str(uuid()),
+                "role": "assistant",
+                "content": "Hi! How can I assist you?",
+            }
+        ]
+    else:
+        for message in st.session_state["messages"]:
+            st.chat_message(message["role"]).write(message["content"])
+            if "feedback" in message:
+                st_feedback(
+                    key=message["id"],
+                    feedback_type="faces",
+                    disable_with_score=message["feedback"],
+                    on_submit=submit_feedback,
+                    kwargs={"llm_key": message["content"].split(":")[0]},
+                )
+
+    if prompt := st.chat_input(placeholder="Enter your prompt"):
+        q = prompt
+        st.chat_message("user").write(q)
         if use_translator:
-            lang = detect_language(input_text)
+            lang = detect_language(q)
             if lang != "English":
-                input_text = translate(text=input_text, translator=translator)
-        responses = []
+                q = translate(text=q, translator=translator)
+        st.session_state["messages"].append(
+            {
+                "id": str(uuid()),
+                "role": "user",
+                "content": q,
+            }
+        )
         links = set()
         for web_tool in [
             web_tool_keys[web_tool_options.index(web_tool_name)]
             for web_tool_name in web_tools
         ]:
             try:
-                for link in related_links(
-                    input_text, config["web_tools"][web_tool]["tool"]
-                ):
+                for link in related_links(q, config["web_tools"][web_tool]["tool"]):
                     links.add(link)
             except BaseException as e:
                 print(e)
@@ -68,27 +100,47 @@ def demo():
         for url in links:
             index.add_documents(from_url(url))
         if gptresearcher:
-            docs = from_research(input_text)
+            docs = from_research(q)
             if docs is not None and len(docs) > 0:
                 index.add_documents(docs)
+        answrs = []
         for llm_key in [
             model_keys[model_options.index(model_name)] for model_name in llms
         ]:
             try:
-                answr = answer(input_text, config["llms"][llm_key]["model"], index)
+                answr = answer(q, config["llms"][llm_key]["model"], index)
                 if use_translator and lang != "English":
-                    answr = translate(
-                        text=answr, target_language=lang, translator=translator
+                    answr["answer"] = translate(
+                        text=answr["answer"],
+                        target_language=lang,
+                        translator=translator,
                     )
-                responses.append(llm_key + ":" + answr + "\n")
+                answrs.append({"llm_key": llm_key, "answer": answr})
             except BaseException as e:
                 print(e)
-        st.info("\n".join(responses))
-
-    with st.form("my_form"):
-        use_translator = st.checkbox("Translate across languages")
-        text = st.text_area("Enter text:", "")
-        if "OPENAI_API_KEY" in args and "TAVILY_API_KEY" in args:
-            gptresearcher = st.checkbox("Enable GPTResearcher")
-        if st.form_submit_button("Submit"):
-            generate_response(text)
+        for answr in reranked(
+            answers=answrs,
+            embeddings=(
+                None
+                if not calculate_scores
+                else st.session_state["vectorstores"][0].embeddings
+            ),
+            config=None if not calculate_scores else config,
+        ):
+            st.chat_message("assistant").write(
+                answr["llm_key"] + ":" + answr["answer"]["answer"]
+            )
+            msgid = str(uuid())
+            st.session_state["messages"].append(
+                {
+                    "id": msgid,
+                    "role": "assistant",
+                    "content": answr["llm_key"] + ":" + answr["answer"]["answer"],
+                    "feedback": st_feedback(
+                        key=msgid,
+                        feedback_type="faces",
+                        on_submit=submit_feedback,
+                        kwargs={"llm_key": answr["llm_key"]},
+                    ),
+                }
+            )
