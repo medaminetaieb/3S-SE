@@ -15,10 +15,7 @@ class VectorStore:
                 raise ValueError("No access Granted")
             elif access is None:
                 creds = vscreds.load()
-                creds.append({
-                    "vs_name": vs_name,
-                    "vs_passphrase": vs_passphrase
-                })
+                creds.append({"vs_name": vs_name, "vs_passphrase": vs_passphrase})
                 vscreds.save(creds=creds)
 
         self.index_path = (
@@ -75,29 +72,32 @@ class VSCredentials:
 
     def save(self, creds: List[Dict[str, str]]) -> bool:
         import json
+        import os
 
         try:
+            os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
             with open(self.file_path, "w") as f:
                 json.dump(creds, f)
                 return True
         except BaseException as e:
             print(e)
             return False
-        
+
     def request_access(self, vs_name: str, vs_passphrase: str) -> Optional[bool]:
-        """Return None if vs_name not found otherwise boolean confirming or denying access
-        """
+        """Return None if vs_name not found otherwise boolean confirming or denying access"""
         creds = self.load()
         for cred in creds:
             if cred["vs_name"] == vs_name:
                 return cred["vs_passphrase"] == vs_passphrase
         return None
-    
-def ls():
+
+
+def ls() -> List[str]:
     load_dotenv()
-    path = os.environ.get(
-            "PROJECT_DATA_DIR", os.path.expanduser("~/Downloads/3S-SE-AI/")
-    ) + "vectorstore/"
+    path = (
+        os.environ.get("PROJECT_DATA_DIR", os.path.expanduser("~/Downloads/3S-SE-AI/"))
+        + "vectorstore/"
+    )
     names = []
     try:
         for entry in os.listdir(path):

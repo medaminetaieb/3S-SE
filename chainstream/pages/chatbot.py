@@ -31,7 +31,10 @@ def demo():
     index = deepcopy(st.session_state["vectorstores"][0].index)
     if len(st.session_state["vectorstores"]) > 1:
         for tmp_vs in st.session_state["vectorstores"][1:]:
-            index.merge_from(tmp_vs.index)
+            try:
+                index.merge_from(tmp_vs.index)
+            except BaseException as e:
+                print(e)
     translator = load_t5()
 
     with st.sidebar:
