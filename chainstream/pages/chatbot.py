@@ -111,7 +111,21 @@ def demo():
             model_keys[model_options.index(model_name)] for model_name in llms
         ]:
             try:
-                answr = answer(q, config["llms"][llm_key]["model"], index)
+                answr = answer(
+                    question=q,
+                    llm=config["llms"][llm_key]["model"],
+                    vectorstore=index,
+                    template=(
+                        config["llms"][llm_key]["template"]
+                        if "template" in config["llms"][llm_key]
+                        else None
+                    ),
+                    prompt=(
+                        config["llms"][llm_key]["prompt"]
+                        if "prompt" in config["llms"][llm_key]
+                        else None
+                    ),
+                )
                 if use_translator and lang != "English":
                     answr["answer"] = translate(
                         text=answr["answer"],

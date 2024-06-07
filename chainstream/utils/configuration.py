@@ -1,4 +1,5 @@
 def load(args={}):
+    from langchain import hub
     from langchain_openai import ChatOpenAI
     from langchain_anthropic import ChatAnthropic
     from langchain_google_vertexai import ChatVertexAI
@@ -80,6 +81,7 @@ def load(args={}):
                     model="accounts/fireworks/models/llama-v3-70b-instruct",
                     fireworks_api_key=args["FIREWORKS_API_KEY"],
                 ),
+                "prompt": hub.pull("rlm/rag-prompt-llama3"),
             }
         except BaseException as e:
             print(e)
@@ -94,6 +96,11 @@ def load(args={}):
                     model="accounts/stability/models/stablelm-2-zephyr-2b",
                     fireworks_api_key=args["FIREWORKS_API_KEY"],
                 ),
+                "template": """Use the following pieces of context to answer the question at the end.
+                If you don't know the answer, just say that you don't know, don't try to make up an answer.
+                {context}
+                Question: {question}
+                Helpful Answer:""",
             }
         except BaseException as e:
             print(e)
@@ -115,6 +122,7 @@ def load(args={}):
                     model="mistral-large-latest",
                     mistral_api_key=args["MISTRAL_API_KEY"],
                 ),
+                "prompt": hub.pull("rlm/rag-prompt-mistral"),
             }
         except BaseException as e:
             print(e)
