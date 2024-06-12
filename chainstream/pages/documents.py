@@ -11,6 +11,8 @@ def demo():
         from_arxiv_url,
         from_pdf_url,
         from_pdf,
+        from_docx,
+        from_pptx,
         from_txt,
         from_md,
         from_xml,
@@ -40,7 +42,7 @@ def demo():
         uploaded_files = st.file_uploader(
             "Choose one or multiple files",
             accept_multiple_files=True,
-            type=["pdf", "txt", "md", "xml", "epub"],
+            type=["pdf", "docx", "pptx", "txt", "md", "xml", "epub"],
         )
         submitted = st.form_submit_button(label="Load into DB")
         if submitted:
@@ -81,6 +83,10 @@ def demo():
                                 docs.extend(from_xml(temp_file.name))
                             elif file_extension == ".epub":
                                 docs.extend(from_epub(temp_file.name))
+                            elif file_extension == ".docx":
+                                docs.extend(from_docx(temp_file.name))
+                            elif file_extension == ".pptx":
+                                docs.extend(from_pptx(temp_file.name))
                     except BaseException as e:
                         logging.error(f"Error processing file: {e}")
             if len(docs) > 0:

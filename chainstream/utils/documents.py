@@ -48,6 +48,22 @@ def from_pdf(file_path: str):
     return docs
 
 
+def from_docx(file_path: str):
+    from langchain_community.document_loaders import Docx2txtLoader
+
+    loader = Docx2txtLoader(file_path)
+    docs = loader.load_and_split()
+    return docs
+
+
+def from_pptx(file_path: str):
+    from langchain_community.document_loaders import UnstructuredPowerPointLoader
+
+    loader = UnstructuredPowerPointLoader(file_path, mode="elements")
+    docs = loader.load_and_split()
+    return docs
+
+
 def from_pdf_url(url: str):
     import requests
     import tempfile

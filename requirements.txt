@@ -24,6 +24,7 @@ pytesseract
 pypdf
 PyPDF2
 PyMuPDF
+docx2txt
 unstructured[all-docs]
 html2text
 playwright
