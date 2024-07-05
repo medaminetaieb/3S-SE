@@ -2,7 +2,7 @@ from multiprocessing import freeze_support
 import os
 from dotenv import load_dotenv
 from torch import cuda
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from chainstream.models.utils import localize
 
 def load(model_name="sentence-transformers/all-mpnet-base-v2", prefer_cuda=True):

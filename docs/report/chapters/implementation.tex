@@ -1,0 +1,239 @@
+\chapter{Implementation}
+This chapter details the implementation process of the solution discussed in the previous chapter: The work environment, tools and libraries employed to accomplish the tasks, the technical aspects of design choices execution, in addition to some of the major results accomplished and how to build upon them.
+\newpage
+
+\section{Workstation}
+This section identifies the characteristics, both hardware and software, of the computer system on which this project was implemented.
+\bigskip
+\subsection{Hardware}
+\smallskip
+\begin{itemize}
+    \item Device : DELL Inspiron 3593
+    \item Processor : Intel(R) Core(TM) i7-1065G7 CPU @ 1.30GHz   1.50 GHz
+    \item RAM : 24 GB
+    \item GPU : NVIDIA GeForce MX230
+\end{itemize}
+\medskip
+\subsection{OS and Software}
+\smallskip
+\begin{itemize}
+    \item OS : Debian trixie inside a Windows Subsystem for Linux (WSL2) VM
+    \item Source-code Editor : Visual Studio Code (with extensions to enable interacting with WSL, Jupyter Notebooks and Python virtual environments) + NeoVim
+    \item Web Browser : Microsoft Edge (for web application testing and troubleshooting)
+    \item Drivers and Toolkits : NVIDIA GPU driver + CUDA Toolkit among others
+\end{itemize}
+\newpage
+
+\section{Components}
+In this section, we research available tools making it possible to develop the different functionalities, provide comparison between alternatives when choices were made, go through how they were implemented and end with testing the effectiveness of the developed solution in addition to laying out its unfortunate limitations.
+
+\subsection{Libraries and Frameworks}
+
+\subsubsection*{Web interface and services}
+There is a plethora of frameworks of this kind, from customary JavaScript frameworks (React, Angular, Vue) to others designed to enable faster delivery of interactive web apps (such as Streamlit and Chainlit).\newline
+The choice was made to use Streamlit as it provides a much faster way to develop LLM chat interfaces than JS frameworks, while also being more advanced than Chainlit in terms of flexibility and building custom interfaces by supplying developers with many customizable and ready-to-use interface components like chat and message containers.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.5\linewidth]{./figures/streamlit-logo.png}
+    \caption{Streamlit logo.}
+\end{figure}\newpage
+We can look through its app gallery to find an abundance of templates that provide many examples of built apps which interact with LLMs, LangChain and other frameworks.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/streamlit-app-gallery.png}
+    \caption{Streamlit App Gallery.}
+\end{figure}\newline
+
+\subsubsection*{RAG pipelines development}
+There are a few frameworks enabling developers to interact with LLMs and RAG pipelines, each of which provide different integrations with external APIs and tools: LangChain, LlamaIndex, Haystack, Langroid.\newline
+The choice was made by 3S project coordinators to use LangChain for their solution. It is a great choice given that this platforms provides all the tools to build complex RAG pipelines without the need to explore external tools. Also, since its emergence in October 2022, this library has gained remarkable prominence with courses available on DeepLearning.ai, tutorials from NVIDIA, OpenAI, Google and others in addition to the exhaustive documentation available online.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.5\linewidth]{./figures/langchain-logo.png}
+    \caption{LangChain logo}
+\end{figure}\newline
+This framework has all the required components to build the most advanced RAG pipelines: Data loading from various sources, LLM and vector store integrations from different providers (both locally and on cloud), prompt templates for different LLMs and tasks, vector store integrations, etc...
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.5\linewidth]{./figures/langchain-components.png}
+    \caption{LangChain Components. (\href{https://python.langchain.com/v0.1/docs/modules/}{LangChain Documentation})}
+\end{figure}\newpage
+
+\subsection{LLMs}
+There is a plethora of models belonging to this family, both closed and open source, with many ways to access and use them.
+\subsubsection*{Locally through Hugging Face Hub}
+Many open-source LLM variants are available on Hugging Face Models Hub, as it is the main developer of the 'transformers' Python library.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{./figures/hf-logo.png}
+    \caption{Hugging Face logo. \href{https://huggingface.co/models}{[Hugging Face models Hub]}}
+\end{figure}
+\begin{quote}
+    "The Hugging Face Hub hosts many models for a \href{https://huggingface.co/tasks}{variety of machine learning tasks}. Models are stored in repositories, so they benefit from \href{https://huggingface.co/docs/hub/repositories}{all the features} possessed by every repo on the Hugging Face Hub. Additionally, model repos have attributes that make exploring and using models as easy as possible."  (\href{https://huggingface.co/docs/hub/models}{[Hugging Face Models Hub documentation]}, 2024)
+\end{quote}
+We can find an abundance of pre-trained LLMs downloadable from the HF Hub.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.85\linewidth]{./figures/hf-tg-models.png}
+    \caption{A short list of popular text-generation models available on HF Hub. \href{https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads}{HF models filtered by `text-generation` task}}
+\end{figure}\newline
+This method allows the most customization of how an LLM work as it loads a model from locally downloaded files. These typically include a handful of customization options.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/Phi-3-mini-4k-instruct-local-files.png}
+    \caption{An illustration of different files of a locally downloaded model \href{https://huggingface.co/microsoft/Phi-3-mini-4k-instruct}{(Phi-3-mini-4k-instruct) from Hugging Face Hub}}.
+\end{figure}\newline
+We can observe multiple files which boast many customization parameters and fine-tuning samples: config.json, configuration\_phi3.py, generation\_config.json, tokenizer\_config.json, sample\_finetuning.json.\newline
+While this method is suitable for fine-tuning and reinforcement learning purposes, it comes with the downsides of high hardware usage (CPU, GPU, RAM, Disk Space) and time-consuming performance of the ML models.
+
+\subsubsection*{API-enabled services and Cloud-based solutions}
+Many companies behind Large Language Models development provide APIs or cloud-based environments to access their models. Some of the most popular options include OpenAI API, Google Cloud Vertex AI, Anthropic, Cohere, FireworksAI, MistralAI, TogetherAI, GroqCloud among others.\newline
+This method, in contrast to running models locally, does not come with the pre-requisites of expensive hardware or delayed answer generation. Even though these solutions are paid services, most provide free trials and some of the available free plans only has a limit on daily and monthly usage, and is usually enough for personal usage. In addition to this, some of these cloud environments provide many models to use. For instance, FireworksAI allows to use Llama-3, Yi-Large, Mixtral, while TogetherAI provides models such as Qwen-2, Gemma (open-source version of Google's model, Gemini), Phi-2, Nous Capybara, and many others, all from within a single platform.
+This solution also allows some customization options through their web interfaces, even though limited.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/togetherai-playground.png}
+    \caption{TogetherAI playground web interface, an example of a cloud-based environment allowing multiple LLMs' customization options and parameters. \href{https://api.together.ai/playground}{TogetherAI Playground service}}
+\end{figure}\newline
+To compare different LLMs and their providers, the `Artificial Analysis LLM Performance Leaderboard` space on Hugging Face provides independent performance benchmarks and pricing across API providers of LLMs.
+\begin{figure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{./figures/LLM-Perf-P1.png}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{./figures/LLM-Perf-P2.png}
+    \end{subfigure}
+    \caption{Artificial Analysis LLM Performance Leaderboard \href{https://huggingface.co/spaces/ArtificialAnalysis/LLM-Performance-Leaderboard}{[ArtificialAnalysis/LLM-Performance-Leaderboard space on Hugging Face]}}.
+\end{figure}\newpage
+The leaderboard shows some of the most common families of LL models: GPT, Gemini, Llama, Mistral, etc...
+Each of these models has its strengths and weaknesses, but are suitable for a RAG context. For this project, some of the most popular LLMs were implemented through various cloud providers for the purpose of exploring and evaluating their performance (the selection was arbitrary in view of that multiple LLMs, rather than a single one, will generate answers in parallel).
+
+\subsection{Vector Stores}
+There are many vector stores and embedding models to choose from which we will look through their differences.\newline
+The choice of the most suitable vector store solution was based on four criteria mainly:
+\begin{itemize}
+    \item Self-hosting: This means that the vector store will be managed locally on the same computing infrastructure as the web server. This is opposed to a cloud-based deployment, which comes with the drawbacks of higher latency, possible network errors and high-costs.
+    \item Latency: This refers to the performance and speed of similarity searching algorithms which are provided by the vector store and its ability to index and handle large volumes of data with the utilization of GPU parallel computing features.
+    \item Accuracy: The relevance of retrieved data to the actual searched query. Often, this has a reverse relation with latency, as more accurate results take longer to be achieved.
+    \item Documentation: Online Documentation and community forums that can guide on how to use the database efficiently.
+\end{itemize}
+\begin{table}[htbp]
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{\textcolor{darkgray}{Vector Store}} & \textbf{\textcolor{darkgray}{Self-hosting}}               & \textbf{\textcolor{darkgray}{Latency}} & \textbf{\textcolor{darkgray}{Accuracy}} & \textbf{\textcolor{darkgray}{Documentation}} \\  \hline
+        \textbf{FAISS}                              & \textcolor{green}{\ding{52}}                              & \textcolor{green}{\ding{52}}           & \textcolor{green}{\ding{52}}            & \textcolor{red}{\ding{56}}                   \\ \hline
+        \textbf{Pinceone}                           & \textcolor{red}{\ding{56}}                                & \textcolor{green}{\ding{52}}           & \textcolor{red}{\ding{56}}              & \textcolor{green}{\ding{52}}                 \\ \hline
+        \textbf{Chroma}                             & \textcolor{green}{\ding{52}} / \textcolor{red}{\ding{56}} & \textcolor{green}{\ding{52}}           & \textcolor{red}{\ding{56}}              & \textcolor{green}{\ding{52}}                 \\ \hline
+        \textbf{Lance}                              & \textcolor{green}{\ding{52}}                              & \textcolor{red}{\ding{56}}             & \textcolor{red}{\ding{56}}              & \textcolor{red}{\ding{56}}                   \\ \hline
+    \end{tabular}
+    \caption{Comparison of popular vector databases}
+\end{table}\newpage
+After careful consideration, FAISS vector store was selected due to its high performance and accuracy in comparison to alternatives. It leverages the GPU-enabled CUDA toolkit, and provides a state-of-the-art implementation of similarity searching algorithms based on this structure.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/faiss_logo.png}
+    \caption{FAISS logo.}
+\end{figure}\newline
+\begin{quote}
+    FAISS is a FOSS library, it stands for "Facebook AI Similarity Search" with an implementation of nearest-neighbor search and k-selection algorithms designed specifically to efficiently handle large data sets, 8.5x faster than previous methods.
+\end{quote}
+
+\subsection{Embedding Model}
+We have the choice to select the most suitable embeddings model.\newline
+We have highlighted in the second chapter the importance of an embedding algorithm that minimize the loss of semantics when converting textual data to embedding vectors. In addition to this, considering that a vector store once initiated with an embedding model, can no longer swap it with another (unless re-initialized from zero). For this purpose, it would be a bad choice to consider cloud solutions as these may be unavailable in some cases (network or provider failure, expiration of tokens...).\newline
+The best choice in this case, as in vector store's choice, is to select a suitable model which is available offline (as in self-hosting). This will avoid foreseeable failures and limit problems.\newline
+This redirects us to the Hugging Face Hub where we can find many embedding models, which are available through the sentence transformers-repository.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.85\linewidth]{./figures/hf-embedding-models.png}
+    \caption{A short list of popular embedding models available on HF Hub. \href{https://huggingface.co/models?pipeline_tag=sentence-similarity&sort=likes}{HF models filtered by `sentence-similarity` task}}
+\end{figure}\newline
+Two of the most popular choices are "all-MiniLM-L12-v2" and "all-mpnet-base-v2", the first of which makes a better choice when working in a limited environment while not paying much attention to retaining semantics (faster embedding generation and smaller size), while the second one, "all-mpnet-base-v2", is the more suitable choice for our case due to, even with its larger footprint, its capability to capture most of the semantics and meanings of sentences.\newpage
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/embedding-modes-performance.png}
+    \caption{Sentence-Tansformers model performance comparison \href{https://sbert.net/docs/sentence_transformer/pretrained_models.html}{[Pre-Trained Sentence Transformers models' performance]}}
+\end{figure}
+\begin{quote}
+    "The all-* models were trained on all available training data (more than 1 billion training pairs) and are designed as general purpose models. The all-mpnet-base-v2 model provides the best quality, while all-MiniLM-L6-v2 is 5 times faster and still offers good quality."  (\href{https://sbert.net/docs/sentence_transformer/pretrained_models.html}{[Sentence Transformers documentation]})
+\end{quote}
+\newpage
+
+\section{Incorporation into a functional RAG system}
+After introducing the frameworks and tools which would allow us to build a RAG system, this section is dedicated to showcasing how these components interact together in the implemented solution.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/rag_components.png}
+    \caption{The overall pipeline of the system to be implemented, showcasing the interaction between the different components, from knowledge augmentation methods (document/data loading and chunking etc...), vector database (index), RAG pipeline (User-Index-LLM interaction), re-ranking and evaluation processes}
+\end{figure}\newpage
+
+\subsection{Data Ingestion Methods}
+The first essential part of the project is to allow the on-demand ingestion of data and new information into the vector store.\newline
+For this purpose, various file formats and online web scraping and fetching methods have been implemented; LangChain, as seen in the previous section, provides a "Document loaders" section in its "Retrieval" toolbox. These tools provide many tutorials and helpful functions to implement document loading and chunking from various sources, which has allowed to accomplish the required methods to satisfy the coordinating teams at 3S.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/data-ingestion-methods.png}
+    \caption{Various data ingestion methods}
+\end{figure}\newline
+To make it more comprehensible, here is a short description of what each of these methods do:
+\begin{itemize}
+    \item Web Pages (from\_url, from\_recursive\_url): Allowing to read a single page from a given URL, or a page and its child pages recursively.
+    \item Arxiv Research Papers (from\_arxiv\_url): Allows to read content directly from an arxiv URL, conserving metadata like author, dates, etc...
+    \item Youtube Content (from\_youtube\_url): Transcribes a video uploaded on YouTube and constructs a document from a given URL.
+    \item Generative Research (from\_research): Utilizes \href{https://gptr.dev/}{GPT Researcher}, a tool that allows to, given a question, generate multiple queries to send to search engines and then generating an artificial report.
+    \item EPUB files (from\_epub): This is an e\-book format suitable for storing and distributing large volumes of information.
+    \item Text files (from\_txt): A file format for storing texts and notes.
+    \item Markdown files (from\_md): An easy to use syntax to write documentation and notes.
+    \item PDF files (from\_pdf): Allowing to read PDF files.
+    \item Same for other file formats...
+\end{itemize}
+
+\subsection{Vector Store}
+As outlined in the project objectives, the implementation of a vector database should allow different teams to upload their documents into separate vector databases.\newline
+To achieve this, two Python classes have been implemented: one to hold the vector store functionalities: loading and saving to local storage in addition to listing available databases, and another to manage access credentials to vector store through a name and a passphrase.\newpage
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/vectorstore-implementation.png}
+    \caption{Vector Store implementation classes and methods}
+\end{figure}
+A vector store can be initialized with "vs\_name" alone, which gives the read access to its contents. To modify it however, one should provide it with a passphrase ("vs\_passphrase"), which would give users who have gained access the ability to load new content through the various data ingestion methods previously mentioned.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.8\linewidth]{./figures/vectorstore-local-dir.png}
+    \caption{Local Directory for storing vector stores.}
+\end{figure}\newline
+The "creds.json" file store access credentials to the available vector stores, while other folders ("3S" and "SSS" in this example) holds the vector store's data.\newline
+A vector store initialization typically includes an embedding model initalization. For our case, as we chose to select a model from Hugging Face Hub ("all-mpnet-base-v2"), we need to ensure that the model is downloaded and stays up-to-date.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/embedding-model-downloading.png}
+    \caption{Embedding Model Implementation: Download and Use}
+\end{figure}\newline
+The "snapshot\_download" function imported from "huggingface\_hub" ensures that the latest version of the model is available locally and can be loaded.
+
+\subsection{LLMs and Prompts}
+To make the application more extensible, the implementation of LLMs and their Prompts was designed in an extendible manner.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/llms-implementation.png}
+    \caption{Implementation of LLMs and Prompts, focusing on extensibility}
+\end{figure}\newline
+Initialized as empty, the list of Large Language Models ("llms" key in the "config" variable) grows dynamically when the function which loads them is passed with API keys from their providers.\newline
+The list is much bigger than this illustration (and allows for integrating other tools "web\_tools", which would allow the LLMs to connect to external web searching APIs), but it is easy to figure out how to add other LLMs and APIs as needed.\newline
+In addition to these APIs, this loading mechanism allowing for flexible Prompt modification when different models require different prompts.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/prompt-template-impl.png}
+    \caption{Incorporating prompts into model definition.}
+\end{figure}\newline
+This approach allows to define a custom prompt template suitable for a specific model (such as in our case of Llama 3) from within a unified source code part. In theory, the "prompt" field can hold any f-string format (a concept in Python used to interpolate variables into a string), but the \href{https://smith.langchain.com/hub}{LangChain Hub} provides many example prompts for different tasks.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/langchain-hub.png}
+    \caption{LangChain Hub web interface.}
+\end{figure}\newline
+\newpage
+
+\section{Testing and Validation}
