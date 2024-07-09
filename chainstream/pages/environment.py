@@ -55,6 +55,14 @@ def demo():
                 else os.environ.get("TOGETHER_API_KEY", "")
             ),
         )
+        GROQ_API_KEY = st.text_input(
+            label="GROQ_API_KEY",
+            value=(
+                args["GROQ_API_KEY"]
+                if "GROQ_API_KEY" in args
+                else os.environ.get("GROQ_API_KEY", "")
+            ),
+        )
         GOOGLE_CSE_ID = st.text_input(
             label="GOOGLE_CSE_ID",
             value=(
@@ -120,6 +128,10 @@ def demo():
                 args["TOGETHER_API_KEY"] = TOGETHER_API_KEY
             elif "TOGETHER_API_KEY" in args:
                 del args["TOGETHER_API_KEY"]
+            if len(GROQ_API_KEY) > 0:
+                args["GROQ_API_KEY"] = GROQ_API_KEY
+            elif "GROQ_API_KEY" in args:
+                del args["GROQ_API_KEY"]
             if len(GOOGLE_CSE_ID) > 0:
                 args["GOOGLE_CSE_ID"] = GOOGLE_CSE_ID
             elif "GOOGLE_CSE_ID" in args:

@@ -7,6 +7,7 @@ def load(args={}):
     from langchain_cohere import ChatCohere
     from langchain_mistralai import ChatMistralAI
     from langchain_together import ChatTogether
+    from langchain_groq import ChatGroq
     from chainstream.models.generation import phi3
     from langchain_core.tools import Tool
     from langchain_google_community import GoogleSearchAPIWrapper
@@ -173,6 +174,17 @@ def load(args={}):
                 "model": ChatTogether(
                     together_api_key=args["TOGETHER_API_KEY"],
                     model="microsoft/phi-2",
+                ),
+            }
+        except BaseException as e:
+            print(e)
+    if "GROQ_API_KEY" in args:
+        try:
+            config["llms"]["gemma2"] = {
+                "name": "Gemma2 9b",
+                "model": ChatGroq(
+                    api_key=args["GROQ_API_KEY"],
+                    model="gemma2-9b-it",
                 ),
             }
         except BaseException as e:
