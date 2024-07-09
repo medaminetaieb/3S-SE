@@ -44,4 +44,3 @@ transformers
 langdetect
 pycountry
 gpt-researcher
-flash-attn

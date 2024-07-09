@@ -1,6 +1,5 @@
 import subprocess
 import os
-import nltk
 
 subprocess.run(
     [
@@ -11,6 +10,8 @@ subprocess.run(
         "--upgrade",
     ]
 )
+
+import nltk
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 subprocess.run(["playwright", "install-deps"])

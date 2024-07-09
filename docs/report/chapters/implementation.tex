@@ -162,12 +162,22 @@ Two of the most popular choices are "all-MiniLM-L12-v2" and "all-mpnet-base-v2",
 \newpage
 
 \section{Incorporation into a functional RAG system}
-After introducing the frameworks and tools which would allow us to build a RAG system, this section is dedicated to showcasing how these components interact together in the implemented solution.
+After introducing the frameworks and tools which would allow us to build a RAG system, it is necessary to discuss the implementation details of these elements and how they were incorporated together.\newline
+This section is dedicated to showcasing how these components interact together in the implemented solution.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/rag_components.png}
     \caption{The overall pipeline of the system to be implemented, showcasing the interaction between the different components, from knowledge augmentation methods (document/data loading and chunking etc...), vector database (index), RAG pipeline (User-Index-LLM interaction), re-ranking and evaluation processes}
-\end{figure}\newpage
+\end{figure}\newline
+This figure demonstrates the overall process that are executed in the system:
+\begin{itemize}
+    \item Loading data from online web content, offline documents and files, or real-time data from APIs (Search engines and GPT Researcher) after which the chunking and embedding transformation occur.
+    \item User preference selections (vector stores, LLMs, enable translation or not)
+    \item Typical RAG processes: retrieval (similarity searching), prompt engineering and transformation, and finally generation
+    \item Reiterate the RAG pipeline for every LLM selection (automatically retranslate the answer to the user's language if needed).
+    \item Re-Ranking of answers based on RAG metrics and user feedback.
+\end{itemize}
+\newpage
 
 \subsection{Data Ingestion Methods}
 The first essential part of the project is to allow the on-demand ingestion of data and new information into the vector store.\newline
@@ -204,12 +214,22 @@ A vector store can be initialized with "vs\_name" alone, which gives the read ac
     \includegraphics[width=.8\linewidth]{./figures/vectorstore-local-dir.png}
     \caption{Local Directory for storing vector stores.}
 \end{figure}\newline
-The "creds.json" file store access credentials to the available vector stores, while other folders ("3S" and "SSS" in this example) holds the vector store's data.\newline
-A vector store initialization typically includes an embedding model initalization. For our case, as we chose to select a model from Hugging Face Hub ("all-mpnet-base-v2"), we need to ensure that the model is downloaded and stays up-to-date.
+The "creds.json" file store access credentials to the available vector stores, while other folders ("3S" and "SSS" in this example) holds the vector store's data.\smallbreak
+A vector store initialization typically includes an embedding model initialization. For our case, as we chose to select a model from Hugging Face Hub ("all-mpnet-base-v2"), we need to ensure that the model is downloaded and stays up-to-date.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{./figures/embedding-model-downloading.png}
-    \caption{Embedding Model Implementation: Download and Use}
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{./figures/embedding-model-loading.png}
+        \caption{Loading}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{./figures/embedding-model-downloading.png}
+        \caption{Downloading}
+    \end{subfigure}
+    \caption{Embedding Model Implementation}
 \end{figure}\newline
 The "snapshot\_download" function imported from "huggingface\_hub" ensures that the latest version of the model is available locally and can be loaded.
 
