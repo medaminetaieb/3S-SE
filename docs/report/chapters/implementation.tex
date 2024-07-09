@@ -46,21 +46,21 @@ We can look through its app gallery to find an abundance of templates that provi
 
 \subsubsection*{RAG pipelines development}
 There are a few frameworks enabling developers to interact with LLMs and RAG pipelines, each of which provide different integrations with external APIs and tools: LangChain, LlamaIndex, Haystack, Langroid.\newline
-The choice was made by 3S project coordinators to use LangChain for their solution. It is a great choice given that this platform provides all the tools to build complex RAG pipelines without the need to explore external tools. Also, since its emergence in October 2022, this library has gained remarkable prominence with courses available on DeepLearning.ai, tutorials from NVIDIA, OpenAI, Google and others in addition to the exhaustive documentation available online.
+The choice was made by 3S project coordinators to use LangChain for their solution. It is a great choice given that this platform provides all the tools to build complex RAG pipelines and personalize the different steps of these pipelines. Also, since its emergence in October 2022, this library has gained remarkable prominence with courses available on DeepLearning.ai, tutorials from NVIDIA, OpenAI, Google and others in addition to the exhaustive documentation available online.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.5\linewidth]{./figures/langchain-logo.png}
     \caption{LangChain logo}
 \end{figure}\newline
-This framework has all the required components to build the most advanced RAG pipelines: Data loading from various sources, LLM and vector store integrations from different providers (both locally and on cloud), prompt templates for different LLMs and tasks, vector store integrations, etc...
+This framework has all the required components to build the most advanced RAG pipelines: Data loading from various sources, LLM and vector store integrations from different providers (both locally and on the cloud), prompt templates for different LLMs and tasks, etc...
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.5\linewidth]{./figures/langchain-components.png}
+    \includegraphics[width=.45\linewidth]{./figures/langchain-components.png}
     \caption{LangChain Components. (\href{https://python.langchain.com/v0.1/docs/modules/}{LangChain Documentation})}
 \end{figure}\newpage
 
 \subsection{LLMs}
-There is a plethora of models belonging to this family, both closed and open source, with many ways to access and use them.
+There is a plethora of models of this type, both closed and open source, with many ways to access and use them.
 \subsubsection*{Locally through Hugging Face Hub}
 Many open-source LLM variants are available on Hugging Face Models Hub, as it is the main developer of the 'transformers' Python library.
 \begin{figure}[htbp]
@@ -93,10 +93,10 @@ This solution also allows some customization options through their web interface
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/togetherai-playground.png}
-    \caption{TogetherAI playground web interface, an example of a cloud-based environment allowing multiple LLMs' customization options and parameters. \href{https://api.together.ai/playground}{TogetherAI Playground service}}
+    \caption{TogetherAI playground web interface, an example of a cloud-based environment allowing multiple LLM's customization options and parameters. \href{https://api.together.ai/playground}{TogetherAI Playground service}}
 \end{figure}\newline
 To compare different LLMs and their providers, the `Artificial Analysis LLM Performance Leaderboard` space on Hugging Face provides independent performance benchmarks and pricing across API providers of LLMs.
-\begin{figure}
+\begin{figure}[htbp]
     \begin{subfigure}{\textwidth}
         \centering
         \includegraphics[width=\linewidth]{./figures/LLM-Perf-P1.png}
@@ -108,7 +108,8 @@ To compare different LLMs and their providers, the `Artificial Analysis LLM Perf
     \caption{Artificial Analysis LLM Performance Leaderboard \href{https://huggingface.co/spaces/ArtificialAnalysis/LLM-Performance-Leaderboard}{[ArtificialAnalysis/LLM-Performance-Leaderboard space on Hugging Face]}}.
 \end{figure}\newpage
 The leaderboard shows some of the most common families of LL models: GPT, Gemini, Llama, Mistral, etc...
-Each of these models has its strengths and weaknesses, but are suitable for a RAG context. For this project, some of the most popular LLMs were implemented through various cloud providers for the purpose of exploring and evaluating their performance (the selection was arbitrary in view of that multiple LLMs, rather than a single one, will generate answers in parallel).
+Each of these models has its strengths and weaknesses, but are suitable for the RAG-context applications. For this project, some of the most popular LLMs were implemented through various cloud providers for the purpose of exploring and evaluating their performance (the selection was arbitrary in view of that multiple LLMs, rather than a single one, will generate answers in parallel).
+\newpage
 
 \subsection{Vector Stores}
 There are many vector stores and embedding models to choose from which we will look through their differences.\newline
@@ -220,40 +221,53 @@ A vector store initialization typically includes an embedding model initializati
     \centering
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{./figures/embedding-model-loading.png}
-        \caption{Loading}
+        \includegraphics[width=\linewidth]{./figures/embedding-model-downloading.png}
+        \caption{Downloading}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.45\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{./figures/embedding-model-downloading.png}
-        \caption{Downloading}
+        \includegraphics[width=\linewidth]{./figures/embedding-model-loading.png}
+        \caption{Loading}
     \end{subfigure}
     \caption{Embedding Model Implementation}
 \end{figure}\newline
-The "snapshot\_download" function imported from "huggingface\_hub" ensures that the latest version of the model is available locally and can be loaded.
+The "snapshot\_download" function imported from "huggingface\_hub" ensures that the latest version of the model is available locally and can be loaded, while the implemented `load` function leverages it and loads the model on the GPU with a CPU fallback.
 
 \subsection{LLMs and Prompts}
-To make the application more extensible, the implementation of LLMs and their Prompts was designed in an extendible manner.
+To make the application more extensible, the implementation of LLMs and their Prompts was designed in an extendible manner.\newpage
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/llms-implementation.png}
     \caption{Implementation of LLMs and Prompts, focusing on extensibility}
-\end{figure}\newline
+\end{figure}
 Initialized as empty, the list of Large Language Models ("llms" key in the "config" variable) grows dynamically when the function which loads them is passed with API keys from their providers.\newline
 The list is much bigger than this illustration (and allows for integrating other tools "web\_tools", which would allow the LLMs to connect to external web searching APIs), but it is easy to figure out how to add other LLMs and APIs as needed.\newline
-In addition to these APIs, this loading mechanism allowing for flexible Prompt modification when different models require different prompts.
+In addition to these APIs, this loading mechanism allowing for flexible Prompt modification when different models require different prompts.\newpage
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/prompt-template-impl.png}
     \caption{Incorporating prompts into model definition.}
-\end{figure}\newline
+\end{figure}
 This approach allows to define a custom prompt template suitable for a specific model (such as in our case of Llama 3) from within a unified source code part. In theory, the "prompt" field can hold any f-string format (a concept in Python used to interpolate variables into a string), but the \href{https://smith.langchain.com/hub}{LangChain Hub} provides many example prompts for different tasks.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/langchain-hub.png}
     \caption{LangChain Hub web interface.}
 \end{figure}\newline
-\newpage
+This Hub allows to find ready-to-use prompt templates suitable for various LLMs for Retrieval-augmented generation purposes.\medskip\newline
+The resulting list of implemented LLMs is as follows.
+\begin{figure}[htbp]
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=.5\linewidth]{./figures/select-llms-p1.png}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=.5\linewidth]{./figures/select-llms-p2.png}
+    \end{subfigure}
+    \caption{List of implemented LLMs}.
+\end{figure}
+\newline\newpage
 
 \section{Testing and Validation}
