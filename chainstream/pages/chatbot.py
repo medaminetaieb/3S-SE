@@ -1,17 +1,18 @@
-def demo():
-    import streamlit as st
-    from streamlit_feedback import streamlit_feedback as st_feedback
-    from chainstream.models.translation import detect_language, translate, load_t5
-    from chainstream.utils import configuration
-    from chainstream.chains.rag import answer
-    from chainstream.utils.documents import from_url, from_research
-    from chainstream.utils.web import related_links
-    from chainstream.utils.vectorstore import VectorStore
-    from chainstream.models.ranking import submit_feedback, reranked
-    from copy import deepcopy
-    import os
-    from uuid import uuid4 as uuid
+import streamlit as st
+from streamlit_feedback import streamlit_feedback as st_feedback
+from chainstream.models.translation import detect_language, translate, load_t5
+from chainstream.utils import configuration
+from chainstream.chains.rag import answer
+from chainstream.utils.documents import from_url, from_research
+from chainstream.utils.web import related_links
+from chainstream.utils.vectorstore import VectorStore
+from chainstream.models.ranking import submit_feedback, reranked
+from copy import deepcopy
+import os
+from uuid import uuid4 as uuid
 
+
+def demo():
     # If vectorstores are not initialized, redirect to loading documents page
     if "vectorstores" not in st.session_state:
         st.session_state["vectorstores"] = [VectorStore(vs_name="_")]

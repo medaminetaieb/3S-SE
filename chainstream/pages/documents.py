@@ -35,6 +35,22 @@ def demo():
     if "vectorstores" not in st.session_state:
         st.session_state["vectorstores"] = [VectorStore(vs_name="_")]
     vectorstores = st.session_state["vectorstores"]
+    with st.form("auth"):
+        vs_name = st.text_input("VectoStore Name", "")
+        vs_passphrase = st.text_input("VectorStore Passphrase", "", type="password")
+        submitted = st.form_submit_button("Authenticate and Load")
+        if submitted:
+            if len(vs_name) > 0 and len(vs_passphrase) > 0:
+                try:
+                    tmp = VectorStore(vs_name=vs_name, vs_passphrase=vs_passphrase)
+                    if tmp is not None:
+                        vectorstores[0] = tmp
+                        st.session_state["vectorstores"] = vectorstores
+                except BaseException as e:
+                    print(e)
+                    st.error("Failed to authenticate", icon="🚨")
+            else:
+                st.error("Please enter credentials", icon="🚨")
     with st.form(key="importdocs"):
         input_urls = st.text_area(
             "Input urls separated by newline",
@@ -44,7 +60,7 @@ def demo():
             accept_multiple_files=True,
             type=["pdf", "docx", "pptx", "txt", "md", "xml", "epub"],
         )
-        submitted = st.form_submit_button(label="Load into DB")
+        submitted = st.form_submit_button(label="Load and Save into DB")
         if submitted:
             docs = []
             if input_urls is not None and len(input_urls) > 0:
@@ -91,29 +107,11 @@ def demo():
                         logging.error(f"Error processing file: {e}")
             if len(docs) > 0:
                 vectorstores[0].index.add_documents(docs)
-    with st.sidebar:
-        with st.form("auth"):
-            vs_name = st.text_input("VectoStore Name", "")
-            vs_passphrase = st.text_input("VectorStore Passphrase", "", type="password")
-            submitted = st.form_submit_button("Authenticate and Load")
-            if submitted:
-                if len(vs_name) > 0 and len(vs_passphrase) > 0:
-                    try:
-                        tmp = VectorStore(vs_name=vs_name, vs_passphrase=vs_passphrase)
-                        if tmp is not None:
-                            vectorstores[0] = tmp
-                            st.session_state["vectorstores"] = vectorstores
-                    except BaseException as e:
-                        print(e)
-                        st.error("Failed to authenticate", icon="🚨")
-                else:
-                    st.error("Please enter credentials", icon="🚨")
-
-        if st.button("Save VectorDB state"):
             if vectorstores[0].save_state():
                 st.success("Vectorstore state saved", icon="✅")
             else:
                 st.error("Please authenticate your vectorstore first", icon="🚨")
+    with st.sidebar:
         vss = st.multiselect(
             "Available Vector Stores",
             ls(),

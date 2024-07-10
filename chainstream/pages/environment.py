@@ -1,8 +1,9 @@
-def demo():
-    import streamlit as st
-    import os
-    from dotenv import load_dotenv
+import streamlit as st
+import os
+from dotenv import load_dotenv
 
+
+def demo():
     load_dotenv()
 
     args = {} if "args" not in st.session_state else st.session_state["args"]
@@ -103,6 +104,14 @@ def demo():
                 else os.environ.get("TAVILY_API_KEY", "")
             ),
         )
+        LANGCHAIN_API_KEY = st.text_input(
+            label="LANGCHAIN_API_KEY",
+            value=(
+                args["LANGCHAIN_API_KEY"]
+                if "LANGCHAIN_API_KEY" in args
+                else os.environ.get("LANGCHAIN_API_KEY", "")
+            ),
+        )
         if st.form_submit_button(label="Confirm"):
             if len(OPENAI_API_KEY) > 0:
                 args["OPENAI_API_KEY"] = OPENAI_API_KEY
@@ -152,5 +161,9 @@ def demo():
                 args["TAVILY_API_KEY"] = TAVILY_API_KEY
             elif "TAVILY_API_KEY" in args:
                 del args["TAVILY_API_KEY"]
+            if len(LANGCHAIN_API_KEY) > 0:
+                args["LANGCHAIN_API_KEY"] = LANGCHAIN_API_KEY
+            elif "LANGCHAIN_API_KEY" in args:
+                del args["LANGCHAIN_API_KEY"]
             st.json(args)
             st.session_state["args"] = args
