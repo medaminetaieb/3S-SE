@@ -1,7 +1,11 @@
-def answer(question: str, llm, vectorstore, template=None, prompt=None):
-    from transformers.pipelines.text_generation import TextGenerationPipeline
-    from chainstream.utils.documents import format_docs
+from transformers.pipelines.text_generation import TextGenerationPipeline
+from chainstream.utils.documents import format_docs
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough, RunnableParallel
+from langchain_core.output_parsers import StrOutputParser
 
+
+def answer(question: str, llm, vectorstore, template=None, prompt=None):
     if isinstance(llm, TextGenerationPipeline):
         context = format_docs(vectorstore.similarity_search(question))
         prompt = [
@@ -32,10 +36,6 @@ def answer(question: str, llm, vectorstore, template=None, prompt=None):
             "answer": response.strip(),
         }
     else:
-        from langchain_core.prompts import PromptTemplate
-        from langchain_core.runnables import RunnablePassthrough, RunnableParallel
-        from langchain_core.output_parsers import StrOutputParser
-
         if template is None and prompt is None:
             template = """Use the following pieces of context to answer the question at the end.
             If you don't know the answer, just say that you don't know, don't try to make up an answer.
