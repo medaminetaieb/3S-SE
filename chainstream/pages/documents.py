@@ -36,7 +36,7 @@ def demo():
         st.session_state["vectorstores"] = [VectorStore(vs_name="_")]
     vectorstores = st.session_state["vectorstores"]
     with st.form("auth"):
-        vs_name = st.text_input("VectoStore Name", "")
+        vs_name = st.text_input("VectorStore Name", "")
         vs_passphrase = st.text_input("VectorStore Passphrase", "", type="password")
         submitted = st.form_submit_button("Authenticate and Load")
         if submitted:

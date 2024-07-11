@@ -52,7 +52,13 @@ def answer(question: str, llm, vectorstore, template=None, prompt=None):
 
         chain = RunnableParallel(
             {
-                "context": vectorstore.as_retriever(),
+                "context": vectorstore.as_retriever(
+                    search_type="similarity_score_threshold",
+                    search_kwargs={
+                        "k": 5,
+                        "score_threshold": 0.4,
+                    },
+                ),
                 "question": RunnablePassthrough(),
             }
         ).assign(

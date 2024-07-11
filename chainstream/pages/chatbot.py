@@ -136,6 +136,9 @@ def demo():
                 answrs.append({"llm_key": llm_key, "answer": answr})
             except BaseException as e:
                 print(e)
+        st.chat_message("assistant").write(
+            f'Answering from retrieved context:\n{answrs[0]["answer"]["context"]}'
+        )
         for answr in reranked(
             answers=answrs,
             embeddings=(
