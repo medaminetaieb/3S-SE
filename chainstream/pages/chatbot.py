@@ -3,7 +3,7 @@ from streamlit_feedback import streamlit_feedback as st_feedback
 from chainstream.models.translation import detect_language, translate, load_t5
 from chainstream.utils import configuration
 from chainstream.chains.rag import answer
-from chainstream.utils.documents import from_url, from_research
+from chainstream.utils.documents import from_url, from_research, format_docs
 from chainstream.utils.web import related_links
 from chainstream.utils.vectorstore import VectorStore
 from chainstream.models.ranking import submit_feedback, reranked
@@ -137,7 +137,7 @@ def demo():
             except BaseException as e:
                 print(e)
         st.chat_message("assistant").write(
-            f'Answering from retrieved context:\n{answrs[0]["answer"]["context"]}'
+            f'Answering from retrieved context:\n{format_docs(answrs[0]["answer"]["context"])}'
         )
         for answr in reranked(
             answers=answrs,
