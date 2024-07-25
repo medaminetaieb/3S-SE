@@ -4,21 +4,16 @@ For the purpose of this project, an extensive and investigative study into recen
 
 \section{Text Generative AI}
 The term Text Generative AI refers to the artificial generation of textual content, it can allude to the tasks of next word suggestions, summarization, rewriting in different tones, cross-language translation, question answering, text or code generation etc...
-It is a type of Artificial Intelligence that utilizes models trained on massive natural language data (Large Language Models). Prominent examples of such models include GPT-3, Gemini, Llama-3. Even though these models are multi-modal (not only text-generative AI, but also can analyse multimedia content such as pictures, audio...), they are in essence language models whose functionality provide a good foundation for natural language processing and generation tasks.
+It is a type of Artificial Intelligence that utilizes models trained on massive natural language data (Large Language Models). Prominent examples of such models include GPT-3, Gemini, Llama-3. Even though these models are multi-modal (not only text-generative AI, can also analyse multimedia content such as pictures, audio...), they are in essence language models whose functionality provide a good foundation for natural language processing and generation tasks.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{./figures/genai-relation-diagram.png}
+    \includegraphics[width=.97\linewidth]{./figures/genai-relation-diagram.png}
     \caption{Relationship between AI, ML, DL, NLP, and Conversational AI terms. \href{https://blog.miarec.com/contact-centers-ai-definition}{[miarec]}}
     \begin{flushleft}
-        \small This figure illustrates the relationship between AI domains. In this project, our focus is more onto LLMs and Conversational AI models (we use the term "LLM" interchangeably to mean "Large Language Model" that may or may not be "Conversational AI"), which are ML models able to handle some NLP tasks, like translation, summarization in addition to their main task of text generation.
+        \small This figure illustrates the relationship between AI domains. In this project, our focus is more onto LLMs (we use the term "LLM" interchangeably to mean "Large Language Model" that may or may not be "Conversational AI"), which are ML models able to handle some NLP tasks, like translation, summarization in addition to their main task of text generation.
     \end{flushleft}
 \end{figure}\newline
-Recent trends in Large Language Models have shown how well they can perform as searching tools or assisting agents. They mimic humanistic thinking and actions by providing chat-like responses to questions and messages. It can achieve this through its ability to recognize whether the prompt is a question, a request to perform an action, or a casual natural language task. Many cloud-based solutions and open-source initiatives have been materialized which has unlocked many possibilities for these models by customizing how they function and augmenting their knowledge.
-These customizations can be summarized in two main points:
-\begin{itemize}
-    \item Prompt Engineering: This represents how the model is prompted, which has a high impact on the quality of generated responses. There are many techniques related to this; we can precise the context and possibly the history of a chat thread on which the LLM base their answers, specify the tone or length of a response, instruct the model on how it should behave, or provide it with examples on how questions should be answered.
-    \item Reinforcement learning from human feedback: For open-source Language Models, one can further train and fine-tune the model. This technique refers to the training of AI model by providing it with direct feedback from humans.
-\end{itemize}
+Recent trends in Large Language Models have shown how well they can perform as searching tools or assisting agents. They mimic humanistic thinking and actions by providing chat-like responses to questions and messages. It can achieve this through its ability to recognize whether the prompt is a question, a request to perform an action, or a casual natural language task.
 \newpage
 
 \section{Retrieval-augmented Generation}
@@ -129,3 +124,6 @@ Prompt Engineering (PE) plays a crucial rule in the context of RAG and LLMs in g
     \caption{Types of Prompts: [X]: context, [Y]: Abbreviation, [Z]: Expanded Form
     (\href{https://www.oajaiml.com/uploads/archivepdf/63501191.pdf}{[A Study on the Implementation of Generative AI Services Using an Enterprise Data-Based LLM Application Architecture]}, 2023)}
 \end{figure}
+
+\section{Conclusion}
+This chapter has identified the key components that make up our system. In summary, to implement a functional RAG pipeline, one needs to orchestrate a Vector Store with methods for knowledge augmentation, similarity search methods to retrieve relevant information, LLMs to generate responses, and prompt engineering to control LLMs' behavior. Having a clear understanding of these individual parts is essential, as the following chapter is about adapting these concepts to our requirements and laying out the system's architecture.

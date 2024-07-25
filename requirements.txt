@@ -1,6 +1,7 @@
 python-dotenv
 asyncio
 nest_asyncio
+numpy
 datasets
 pandas
 streamlit

@@ -1,11 +1,11 @@
-\chapter{Methodology and Planning}
-This chapter explores the implementation strategies of the system's components and explicates the rationale behind the decisions made when different alternatives were available. It then details the project's schedule and anticipated time frames for tasks' completion.
+\chapter{Methodology}
+This chapter explores the implementation strategies of the system's components and explains the rationale behind the decisions made when different alternatives were available. It then details the project's schedule and anticipated time frames for tasks' completion.
 \newpage
 
 \section{Groundwork Analysis}
 This section is about researching and exploring the different approaches which can be pursued to implement the various components of the system and choosing the proper way that fits our situation.
 \subsection{Cloud providers vs local environment}
-The main components of a RAG system (LLMs, a Vector Store, Embedding Model) can be deployed and used locally or through cloud providers. One should consider the benefits and drawbacks of each method and choose accordingly.
+The main components of a RAG system (LLMs, a Vector Store, Embedding Model) can be deployed and used both locally or through cloud providers. One should consider the benefits and drawbacks of each method and choose accordingly.
 \subsubsection{Vector Store and Embedding Models}
 These technologies are coupled together because they complement each other (a vector store depends on an embedding model) and it would be preferable to organize a single environment for both of them. For example, if one or both of these were hosted on the cloud, an internet failure or an access token expiration would result in the overall system outage. It would be wise to avert this downtime by choosing to implement those in a local environment. This would mean that uploading local files will always succeed and network overload or API key expiration risks would be mitigated.\newline
 On the other hand, choosing this method would result in an increased hardware utilization (RAM, GPU and Hard Disk) and execution time.\newline
@@ -36,3 +36,34 @@ For this purpose, an anticipatory study of the system's knowledge augmentation m
     \item Search Engine Results: By using some of Search Engine APIs, connect the user's query directly to search results and then scrape information for the returned URLs.
     \item AI-generated researches: LLMs can also automatize the traditional process of searching the web, reading webpages, and artificially generating a report based on those analyzed pages.
 \end{itemize}
+\newpage
+
+\section{Project Management}
+After gaining a better understanding of the elements that would constitute the project it is now time to plan out expected tasks into an organized timetable. This section of the chapter addresses that. It is composed of two parts, one explaining the suitability of the employed methodology throughout the project, and another detailing the tasks to be undertaken.
+\subsection{Methodology}
+Given the nature of this project, the Scrum methodology was selected for the implementation of the system. This iterative approach allowed for the continuous development and refinement of tasks (Sprints) throughout this internship by allowing users' interference and feedback during the development process. This flexibility was particularly valuable in this end-of-studies project where the final requirements kept evolving.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/scrum-framework-9.29.23.png}
+    \caption{Scrum framework \href{https://www.scrum.org/resources/what-scrum-module}{[What is Scrum (scrum.org)]}}.
+\end{figure}\newline
+This methodology defines the steps to implement a project as follows :
+\begin{enumerate}
+    \item Project Planning : Defining the project's overall objectives and values to be gained by users. And on a smaller scale, the specific Sprint objectives.
+    \item Product Backlog : Identifying and re-prioritizing the customer's requirements into an organized list of Sprints.
+    \item Sprints : Identifying and organizing tasks into a list of Sprints
+    \item Scrum Meetings : Daily short meetings to discuss progress and challenges to complete a Sprint's tasks.
+    \item Increment development : Iteratively complete Sprint cycles (planning, design, coding, testing and review) to complete increments.
+    \item Sprint Review : Review of the completed work with the entreprise supervisor
+    \item Sprint Retrospective : Discussing what went good and what went bad during the Sprint to gain better insight on what can be improved in the future.
+\end{enumerate}
+The following section demonstrates the influence of this agile methodology, by showcasing a planned timetable in compliance with the iterative approach of the Scrum methodology.\newpage
+\subsection{Planning}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/gantt-chart-1.png}
+    \caption{The planned Gantt Chart}
+    \begin{flushleft}
+        \small This Gantt Chart, even though integrates the iterative approach in some tasks, "Prompt Engineering" and "Loading Documents" for example, where tasks were broken down into separate segments
+    \end{flushleft}
+\end{figure}
