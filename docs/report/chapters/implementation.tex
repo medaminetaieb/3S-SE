@@ -74,41 +74,32 @@ Many open-source LLM variants are available on Hugging Face Models Hub, as it is
 We can find an abundance of pre-trained LLMs downloadable from the HF Hub.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=.85\linewidth]{./figures/hf-tg-models.png}
-    \caption{A short list of popular text-generation models available on HF Hub. \href{https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads}{HF models filtered by `text-generation` task}}
+    \includegraphics[width=.85\linewidth]{./figures/hf-models.png}
+    \caption{A short list of popular models hosted on HF Hub, which can be explored by their categories/tasks. \href{https://huggingface.co/models}{[Models - Hugging Face]}}
 \end{figure}\newline
-This method allows the most customization of how an LLM work as it loads a model from locally downloaded files. These typically include a handful of customization options.
+This method allows the free utilization of a pre-trained model without being confined to cloud-platforms and their plans. As discussed in the previous chapter, this method will be used for the embedding model.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{./figures/Phi-3-mini-4k-instruct-local-files.png}
-    \caption{An illustration of different files of a locally downloaded model \href{https://huggingface.co/microsoft/Phi-3-mini-4k-instruct}{(Phi-3-mini-4k-instruct) from Hugging Face Hub}}.
+    \includegraphics[width=\linewidth]{./figures/mpnet-local-files.png}
+    \caption{The contents of a model repository downloaded locally \href{https://huggingface.co/sentence-transformers/all-mpnet-base-v2}{(all-mpnet-base-v2) on Hugging Face Hub}}.
 \end{figure}\newline
-We can observe multiple files which boast many customization parameters and fine-tuning samples: config.json, configuration\_phi3.py, generation\_config.json, tokenizer\_config.json, sample\_finetuning.json.\newline
-While this method is suitable for fine-tuning and reinforcement learning purposes, it comes with the downsides of high hardware usage (CPU, GPU, RAM, Disk Space) and time-consuming performance of the ML models.
 
 \subsubsection*{API-enabled services and Cloud-based solutions}
 Many companies behind Large Language Models development provide APIs or cloud-based environments to access their models. Some of the most popular options include OpenAI API, Google Cloud Vertex AI, Anthropic, Cohere, FireworksAI, MistralAI, TogetherAI, GroqCloud among others.\newline
 This method, in contrast to running models locally, does not come with the pre-requisites of expensive hardware or delayed answer generation. Even though these solutions are paid services, most provide free trials and some of the available free plans only has a limit on daily and monthly usage, and is usually enough for personal usage. In addition to this, some of these cloud environments provide many models to use. For instance, FireworksAI allows to use Llama-3, Yi-Large, Mixtral, while TogetherAI provides models such as Qwen-2, Gemma (open-source version of Google's model, Gemini), Phi-2, Nous Capybara, and many others, all from within a single platform.
-This solution also allows some customization options through their web interfaces, even though limited.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/langchain-llm-integrations.png}
+    \caption{LangChain Integrations with LLMs cloud providers. \href{https://python.langchain.com/v0.1/docs/integrations/llms/}{[Langchain Documentation - LLMs]}}
+    \begin{flushleft}
+        \small The previous list presents a subset of the integrations provided by Langchain. In addition to the aforementioned items, MistralAI and GrokCloud were integrated in the system to provide a plethora of Large Language Models suitable for Retrieval-augmented Generation. This solution also allows for some customization options through their web interfaces and API function parameters, even though limited when compared to local implementation.
+    \end{flushleft}
+\end{figure}
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/togetherai-playground.png}
     \caption{TogetherAI playground web interface, an example of a cloud-based environment allowing multiple LLM's customization options and parameters. \href{https://api.together.ai/playground}{TogetherAI Playground service}}
-\end{figure}\newline
-To compare different LLMs and their providers, the `Artificial Analysis LLM Performance Leaderboard` space on Hugging Face provides independent performance benchmarks and pricing across API providers of LLMs.
-\begin{figure}[htbp]
-    \begin{subfigure}{\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{./figures/LLM-Perf-P1.png}
-    \end{subfigure}
-    \begin{subfigure}{\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{./figures/LLM-Perf-P2.png}
-    \end{subfigure}
-    \caption{Artificial Analysis LLM Performance Leaderboard \href{https://huggingface.co/spaces/ArtificialAnalysis/LLM-Performance-Leaderboard}{[ArtificialAnalysis/LLM-Performance-Leaderboard space on Hugging Face]}}.
-\end{figure}\newpage
-The leaderboard shows some of the most common families of LL models: GPT, Gemini, Llama, Mistral, etc...
-Each of these models has its strengths and weaknesses, but are suitable for the RAG-context applications. For this project, some of the most popular LLMs were implemented through various cloud providers for the purpose of exploring and evaluating their performance (the selection was arbitrary in view of that multiple LLMs, rather than a single one, will generate answers in parallel).
+\end{figure}
 \newpage
 
 \subsection{Vector Stores}
@@ -162,7 +153,7 @@ Two of the most popular choices are "all-MiniLM-L12-v2" and "all-mpnet-base-v2",
 \end{quote}
 \newpage
 
-\section{Incorporation into a functional RAG system}
+\section{Incorporating into a functional RAG system}
 After introducing the frameworks and tools which would allow us to build a RAG system, it is necessary to discuss the implementation details of these elements and how they were incorporated together.\newline
 This section is dedicated to showcasing how these components interact together in the implemented solution.
 \begin{figure}[htbp]
@@ -190,33 +181,36 @@ For this purpose, various file formats and online web scraping and fetching meth
 \end{figure}\newline
 To make it more comprehensible, here is a short description of what each of these methods do:
 \begin{itemize}
-    \item Web Pages (from\_url, from\_recursive\_url): Allowing to read a single page from a given URL, or a page and its child pages recursively.
+    \item Web Pages (from\_url, from\_recursive\_url): Allowing to read a single page from a given URL, or a page and its child pages recursively, supporting static and dynamic web content.
     \item Arxiv Research Papers (from\_arxiv\_url): Allows to read content directly from an arxiv URL, conserving metadata like author, dates, etc...
     \item Youtube Content (from\_youtube\_url): Transcribes a video uploaded on YouTube and constructs a document from a given URL.
     \item Generative Research (from\_research): Utilizes \href{https://gptr.dev/}{GPT Researcher}, a tool that allows to, given a question, generate multiple queries to send to search engines and then generating an artificial report.
     \item EPUB files (from\_epub): This is an e\-book format suitable for storing and distributing large volumes of information.
     \item Text files (from\_txt): A file format for storing texts and notes.
-    \item Markdown files (from\_md): An easy to use syntax to write documentation and notes.
+    \item Markdown files (from\_md): An easy to use syntax to write documentation and notes
     \item PDF files (from\_pdf): Allowing to read PDF files.
     \item Same for other file formats...
 \end{itemize}
+Toolkits: NLTK, BeautifulSoup, Playwright, Unstructured, PyMuPDF, Pandoc, GPT Researcher, Tavily, LLMs
 
-\subsection{Vector Store}
+\subsection{Retrieval}
+\subsubsection{Vector Store}
 As outlined in the project objectives, the implementation of a vector database should allow different teams to upload their documents into separate vector databases.\newline
-To achieve this, two Python classes have been implemented: one to hold the vector store functionalities: loading and saving to local storage in addition to listing available databases, and another to manage access credentials to vector store through a name and a passphrase.\newpage
+To achieve this, two Python classes have been implemented: one to hold the vector store functionalities: loading and saving to local storage in addition to listing available databases, and another to manage access credentials to vector store through a name and a passphrase.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/vectorstore-implementation.png}
     \caption{Vector Store implementation classes and methods}
-\end{figure}
-A vector store can be initialized with "vs\_name" alone, which gives the read access to its contents. To modify it however, one should provide it with a passphrase ("vs\_passphrase"), which would give users who have gained access the ability to load new content through the various data ingestion methods previously mentioned.
+\end{figure}\newline
+A vector store can be initialized with "vs\_name" alone, which gives the read access to its contents. To modify it however, one should provide it with a passphrase ("vs\_passphrase"), which would give users who have gained access the ability to load new content through the various data ingestion methods previously mentioned.\newpage
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=.8\linewidth]{./figures/vectorstore-local-dir.png}
     \caption{Local Directory for storing vector stores.}
-\end{figure}\newline
-The "creds.json" file store access credentials to the available vector stores, while other folders ("3S" and "SSS" in this example) holds the vector store's data.\smallbreak
-A vector store initialization typically includes an embedding model initialization. For our case, as we chose to select a model from Hugging Face Hub ("all-mpnet-base-v2"), we need to ensure that the model is downloaded and stays up-to-date.
+\end{figure}
+The "creds.json" file store access credentials to the available vector stores, while other folders ("3S" and "SSS" in this example) holds the vector store's data.
+\subsubsection{Chunking and Embedding}
+A vector store initialization typically includes an embedding model initialization, which vectorizes the documents' chunks. For our case, as we chose to select a model from Hugging Face Hub ("all-mpnet-base-v2"), we need to ensure that the model is downloaded and stays up-to-date.
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{0.45\textwidth}
@@ -232,24 +226,36 @@ A vector store initialization typically includes an embedding model initializati
     \end{subfigure}
     \caption{Embedding Model Implementation}
 \end{figure}\newline
-The "snapshot\_download" function imported from "huggingface\_hub" ensures that the latest version of the model is available locally and can be loaded, while the implemented `load` function leverages it and loads the model on the GPU with a CPU fallback.
-
-\subsection{LLMs and Prompts}
-To make the application more extensible, the implementation of LLMs and their Prompts was designed in an extendible manner.\newpage
+The "snapshot\_download" function imported from "huggingface\_hub" ensures that the latest version of the model is available locally and can be loaded, while the implemented `load` function leverages it by loading the model on the GPU and falls back to the CPU when needed.\newpage
+\subsubsection{Retrieval and Similarity Search}
+In some cases where the knowledge base does not contain relevant information to the user query, naive RAG would retrieve the passages with the highest similarity score, even if its contents are not pertinent to the question. This issue is addressed by only including documents which scores attain a certain threshold, eliminating unnecessary passages thus reducing context size when prompting LLMs, and providing trustworthiness when no content can be found so the LLMs inform the user rather than introducing hallucination in generated answers.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{./figures/llms-implementation.png}
+    \includegraphics[width=\linewidth]{./figures/similarity_search_threshold.png}
+    \caption{Similarity Search Tuning}
+    \begin{flushleft}
+        \small The score\_threshold parameter allows to set a value which only passage that has a higher score are passed to the LLM's context, eliminating irrelevant information and setting a limit on the maximum number of passages (k parameter set to 5). The choice of these values was based on experimentation and testing with different values, where some relevant information could be dismissed if the threshold was set to a higher value, and the risk of irrelevancy was significant if set to lower value.
+    \end{flushleft}
+\end{figure}\newline
+
+\subsection{LLMs and Prompts}
+As new products and cloud platforms are constantly emerging and changing rapidly, the models and tools (web searching APIs), which allow the LLMs to connect to external web searching APIs, were implemented in an extendible manner, where adding, removing or customizing LLMs and their behavior is an easy change in code. The following code snippet showcases the tool loading process when the environment is started.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.9\linewidth]{./figures/llms-implementation.png}
     \caption{Implementation of LLMs and Prompts, focusing on extensibility}
-\end{figure}
-Initialized as empty, the list of Large Language Models ("llms" key in the "config" variable) grows dynamically when the function which loads them is passed with API keys from their providers.\newline
-The list is much bigger than this illustration (and allows for integrating other tools "web\_tools", which would allow the LLMs to connect to external web searching APIs), but it is easy to figure out how to add other LLMs and APIs as needed.\newline
-In addition to these APIs, this loading mechanism allowing for flexible Prompt modification when different models require different prompts.\newpage
+    \begin{flushleft}
+        \small The lists of Large Language Models ("llms" key in the "config" variable) and tools ("web\_tools") grow dynamically when provided with valid API keys.
+    \end{flushleft}
+\end{figure}\newline
+The list is much longer than this illustration, still it is easy to figure out how to add other LLMs and APIs as needed.\newline
+In addition to these APIs, this loading mechanism allows for flexible Prompt modification when different models require different prompts.\newpage
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/prompt-template-impl.png}
     \caption{Incorporating prompts into model definition.}
 \end{figure}
-This approach allows to define a custom prompt template suitable for a specific model (such as in our case of Llama 3) from within a unified source code part. In theory, the "prompt" field can hold any f-string format (a concept in Python used to interpolate variables into a string), but the \href{https://smith.langchain.com/hub}{LangChain Hub} provides many example prompts for different tasks.
+This approach allows to define a custom prompt template suitable for a specific model (such as in our case of Llama 3) from within a unified source code file. In theory, the "prompt" field can hold any f-string format (a concept in Python used to interpolate variables dynamically into a string), but the \href{https://smith.langchain.com/hub}{LangChain Hub} provides many example prompts for different tasks.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/langchain-hub.png}
@@ -260,14 +266,102 @@ The resulting list of implemented LLMs is as follows.
 \begin{figure}[htbp]
     \begin{subfigure}{\textwidth}
         \centering
-        \includegraphics[width=.5\linewidth]{./figures/select-llms-p1.png}
+        \includegraphics[width=.7\linewidth]{./figures/select-llms-p1.png}
     \end{subfigure}
     \begin{subfigure}{\textwidth}
         \centering
-        \includegraphics[width=.5\linewidth]{./figures/select-llms-p2.png}
+        \includegraphics[width=.7\linewidth]{./figures/select-llms-p2.png}
     \end{subfigure}
     \caption{List of implemented LLMs}.
-\end{figure}
-\newline\newpage
+\end{figure}\newpage
+\subsection{Evaluation and Ranking}
+As multiple answer generations occur in parallel, it is essential to provide the better quality responses first. For this purpose, RAG-based metrics were implemented with the help of the Ragas library. It stands for Rag Assessment and provides various metrics to evaluate RAG pipeline performance.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/ragas-metrics.png}
+    \caption{RAG pipeline evaluation metrics and description}
+\end{figure}\newline
+When combined with the similarity score returned by the vector store when retrieving documents, this library allowed to assess the retrieval phase context relevancy and generation phase consistency against the given context and the prompt.
+In addition to these metrics, a user-driven feedback was implemented and integrated into the ranking algorithm to assess the overall satisfaction over a specific Large Language Model.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/ranking-algo.png}
+    \caption{Evaluation metrics for the ranking algorithm}
+    \begin{flushleft}
+        \small This function sorts the generated responses based on the evaluation scores it obtained. It calculates the score based on consistency of the generated answer against the given feedback and its relevancy against the question it received, in addition to the similarity score and the feedback given by users. The formula to calculate the score is as follows :
+        score = feedback score * similarity score * faithfulness score * answer relevance score
+    \end{flushleft}
+\end{figure}\newline
+\newpage
 
 \section{Testing and Validation}
+\subsection{Response without Retrieval-augmented Generation}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/code-norag.png}
+    \caption{Implementation of a Large Language Model (Gemma 2) without RAG functionality}
+\end{figure}\newpage
+The execution of the previous code resulted in the following output.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/answer_norag.png}
+    \caption{A Large Language model response without RAG}
+\end{figure}\newline
+The example demonstrates the inconvenience of using an LLM when looking for a short and accurate response to a given query ("what are the different types of retrieval augmentation processes"). The generated answer is very long and clearly exhibits hallucination, as it is not accurate enough.\newline
+The next section is about how this inconvenience can be effectively rectified and changed to an acceptable behavior.\newpage
+\subsection{Retrieval-augmented Generation results}
+\subsubsection{Data: Question and Answer}
+We will need to load some data into the knowledge base. This information represents the ground truth on which we desire LLMs to base their answers.\newline
+For this purpose, a \href{https://arxiv.org/abs/2312.10997}{PDF file from a research parper on Arxiv} will be uploaded as target data. Page 11 of this document contain the answer to our previous question.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/toberetrieved.png}
+    \caption{The content of the document containing the desired answer to the question ("what are the different types of retrieval augmentation processes")}
+    \begin{flushleft}
+        \small This page from the PDF file contain clear answer to our question (3 types of retrieval augmentation processes: iterative, recursive, adaptive)
+    \end{flushleft}
+\end{figure}\newline
+After having established a query to be asked to the model and its corresponding desired answer, we will now implement a simple RAG pipeline with the same previous model (Gemma 2) to see the difference in generated answers.\newpage
+\subsubsection{Knowledge Base initialization}
+The first step is to load the PDF file into the knowledge base. For this purpose, we need to initialize a FAISS index with an embedding model (all-mpnet-base-v2), which will convert the information read from the file through PyMyPDFLoader to a numerical representation suitable for similarity search afterwards.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/vectorstore_init.png}
+    \caption{Vector Store initialization with data}
+    \begin{flushleft}
+        \small This sample vector store initialization included reading and loading the required PDF file from local storage, resulting in 38 chunks, which simplifies the process of retrieving and passing the most relevant chunks to the large language model later on.
+    \end{flushleft}
+\end{figure}\newpage
+\subsubsection{Similarity Search dry run}
+The following code imitates the retrieval phase in a complete RAG pipeline, providing an overview of the contents of the vector store and the results when some passages get retrieved.\newline
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/vectorstoresimilaritysearchwithscore_code.png}
+    \caption{Retrieving relevant documents from the database}
+\end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/vectorstoresimilaritysearchwithscore_output.png}
+    \caption{Output from similarity search}
+    \begin{flushleft}
+        \small The returned passages, as seen above, contain parsed text from the PDF file. As the vector store contain separate chunks, the result of running the previous code is a list containing document chunks, each with the textual content and some metadata that helps representing the whole documents through its chunks in a vector store. These chunks are sorted by their relevance score, which is calculated based on the cosine similarity measure between the query and the actual passage's embeddings vectors. The highlighted text is the desired data that we want to pass to the LLM afterwards. This passage is returned 3rd on the list, with a score of 0.28.
+    \end{flushleft}
+\end{figure}\newpage
+The results of retrieval, even though still optimizable, is satisfactory. Given a query, it is almost impossible to not retrieve the relevant passage outside the first 5 elements. This is because of the indexing strategy implemented in the vector store which allows the calculation of the similarity between every chunk and the query to ensure most similar passages are retrieved effectively.\newline
+These retrieved documents can now be integrated in a prompt and passed to the LLM to control the context of its generation process.\newpage
+\subsubsection{Response with Retrieval-augmented Generation}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.9\linewidth]{./figures/rag-code.png}
+    \caption{Initialization of a simple RAG pipeline for testing}
+    \begin{flushleft}
+        \small The steps to initialize the RAG pipeline are: 1. set the prompt to support passing the context (retrieved documents) and question, along with instructing the model to only base its answer on the given context, 2. reconstructing the prompt by filling the variables (retrieving and formatting the context and the question), 3. passing the constructed prompt to the LLM (chat), 4. and finally transforming the LLM's response into a human readable format.
+    \end{flushleft}
+\end{figure}\newpage
+Executing the previous code resulted in the desired output.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/rag-answer.png}
+    \caption{The generated answer from a RAG pipeline}
+\end{figure}\newline
+The response demonstrates how effective was the pipeline from transforming a long answer into a very accurate direct answer.

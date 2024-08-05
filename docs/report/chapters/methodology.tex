@@ -63,7 +63,8 @@ The following section demonstrates the influence of this agile methodology, by s
     \centering
     \includegraphics[width=\linewidth]{./figures/gantt-chart-1.png}
     \caption{The planned Gantt Chart}
-    \begin{flushleft}
-        \small This Gantt Chart, even though integrates the iterative approach in some tasks, "Prompt Engineering" and "Loading Documents" for example, where tasks were broken down into separate segments
-    \end{flushleft}
 \end{figure}
+\par This Gantt Chart illustrates the timetable of planned tasks and how they were split over smaller chunks to accomplish them and iterate the development process over different segments. This method allowed to accomplish Increments, which represent tangible steps towards the final project implementation: The first iteration (second week of March) was planned to implement Large Language Models standalone answering functionality (without RAG or a vector store), combining cloud-based LLMs with prompt engineering techniques. The next iteration focused on initiating the RAG pipeline by implementing a vector store index with static content, modifying Prompts to control the LLMs' factual grounding, after which some testing and further development was conducted to tailor to the different LLMs and make the vector store more dynamic by implementing data augmentation methods. After these two iterations which were completed by the start of May, further enhancement was undertaken to customize the indexing methods to tailor to different teams and the retrieval phase to minimize dissimilar results, in addition to supplying more data augmentation knowledge sources through APIs and the exploration of how a ranking algorithm could be implemented. The final iteration focused on integrating all the functionalities into a web interface, implementing a user feedback option and enhance answer ranking and validating the results with the corporate supervisor.
+
+\section{Conclusion}
+This chapter, along with the previous one, clarified the project's roadmap and helped breaking down the problem statement into a list of tasks to be implemented. These tasks are now explained in more detail in the following chapter, which discusses the implementation phase of this project.
