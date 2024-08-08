@@ -1,4 +1,4 @@
-\chapter{Introduction}
+\chapter{Presentation of the project framework}
 This chapter is a preamble to the conceptualization of this end-of-studies project. It lays out the context and influences which made it relevant in current settings.\newline
 First, it describes the background and sequence of developments that brought much of the employed technologies into existence. Next, it introduces the hosting company and discusses its necessity for a such novel solution. And finally, it walks through the pursued objectives and innovations which address the insufficiencies of existing solutions.
 \newpage
@@ -9,7 +9,7 @@ In line with this discussion, it is worth highlighting the evolving landscape of
 Auspiciously, the underlying technology that empower this kind of chatbots is discrete from their corresponding platforms, i.e., it can be integrated in other projects as a library or a software component rather than being exclusive to their native applications. This presents an interesting theme for an internship project which attempts to build upon these technologies to provide a much needed solution for an entreprise with many activities and projects to accomplish and for a data science student aspiring to continuously learn the newest trends in AI and Machine Learning.
 \newpage
 
-\section{Hosting Company}
+\section{Hosting company}
 The hosting of this project was managed by Standard Sharing Software (3S).
 \smallskip\newline
 \begin{figure}[htbp]
@@ -22,7 +22,8 @@ It is based in Montplaisir, Tunis, Tunisia (headquarters), and in Charguia 1, Tu
 3S Group's work culture helped the success of this project through its core values of commitment, excellence, innovation and teamwork, which were reflected during the whole duration of this internship, from project initialization until delivery, as evidenced by the organizers's relentless dedication to meeting project deadlines, the pursuit of using innovative tools, the collaborative problem-solving approach, and the unwavering commitment to delivering exceptional results.
 \newpage
 
-\section{Problem Statement}
+\section{Study of the existing}
+\subsection{Description of the existing}
 Traditional enterprise search engines, including the methods currently utilized by 3S employees, often have many limitations due to the complexity of user queries' context comprehension and human language understanding. This is true because traditional methods of content searching is based on exact text matching without semantic-based retrieval. Even with the emergence of AI tools like ChatGPT, which address Natural Language Processing/Analysis, access to large enterprise data is still a major hurdle for such systems. Also, we have witnessed in recent years the amount of pressure governments have put on AI products in order to evade potential privacy and copyright infringements. This is good overall as such regulations ensure publishers' copyright and security of private information. However, this also means that companies need to develop their own solutions to effectively harness the recent breakthroughs of this field in their toolkit.\medskip\newline
 In the table below, an identification and comparison between a few existing solutions has been undertaken to understand their limitations and how to build upon them.
 \begin{table}[htbp]
@@ -48,11 +49,13 @@ In the table below, an identification and comparison between a few existing solu
     \end{tabular}
     \caption{Comparison of existing solutions}
 \end{table}\newline
+\subsection{Criticism of the existing}
 In general, one can utilize any ready-to-use LLM-powered chatbot (e.g. ChatGPT, Microsoft Copilot, Google Gemini, and many others). But these solutions, even though allowing document-answering, don't come with document persistence, which means by leaving the chat, the documents are gone unless re-uploaded.\newline
 Google is experimenting with a new solution (NotebookLM) which allows exactly that by connecting to cloud-hosted documents, in addition to methods allowing to upload local files and webpage content from URLs. Yet, this falls short for enterprise use as it is intended for casual use cases (e.g. note taking, document editing suggestions and personal project research) rather than question-answering and does not provide features to share knowledge between different teams. On the other hand, Weaviate, a company behind a vector store implementation, maintains \href{https://github.com/weaviate/Verba}{a repository on GitHub} which addresses the same objectives as this project. Their solution, called Verba, is a well-organized open-source project that can be easily deployed on-premises or in a cloud environment. However, several challenges need to be addressed before a company can adapt it to their specific needs: customization is difficult if not impossible given that the project depends on many packages they developed or contributed to (goldenverba, weaviate, ...), requiring many API keys from various providers (vector database, LLMs, cloud providers, etc...), in addition to the inability to create and manage different databases for different teams.\smallskip\newline
 This scarcity and inadequacy of available solutions raises the need to design and develop a custom product suitable for the specific needs and requirements set up by individual enterprises, which are discussed in the following section.
 \newpage
-\section{Objectives}
+\section{Proposed solution}
+\subsection{Objectives}
 This project aims to address general-purpose large language models' limitations, which can be summed up in data confinement to training phase and private data access, by developing a novel search functionality that leverages retrieval-augmented generation techniques to deliver insightful results for enterprise data. The system will prioritize the following objectives:
 \begin{itemize}
     \item Enhance AI-generated responses with External Knowledge: Retrieve relevant passages from a curated enterprise knowledge base each time an LLM is prompted to improve its factual grounding and reduce the risk of hallucinating.
@@ -62,6 +65,9 @@ This project aims to address general-purpose large language models' limitations,
     \item Leverage RAG-based metrics for evaluation: Employ retrieval-augmented generation evaluation metrics to assess the quality of pipeline stages' results (retrieval quality/accuracy, context-generation consistency, answer relevancy)
 \end{itemize}
 \newpage
-\section{Significance of the study}
+\subsection{Significance of the study}
 The proposed Generative AI solution would help employees find answers from enterprise knowledge without having to browse vast amounts of documents. This is enabled by augmenting LLM knowledge using techniques of retrieval-augmented generation and prompt engineering for context precision. It would also allow them to interfere in the steps of answer-generation by providing ways to customize the external knowledge base and conduct online researching, powered by traditional search engines and generative AI researching tools, through a unified interface.\medskip\newline
 From an educational perspective, this project presents a valuable opportunity to gain expertise on some of the most capable ML models and personalize/extend their functioning. Anticipated learning outcomes of accomplishing this project include an enhanced perception of large models' parameters and how they affect performance, picking up prompt engineering techniques, planning out and implementing RAG pipelines that tailor to specific needs, using both local and cloud components, in addition to developing various data scraping methods.
+\section{Conclusion}
+This first chapter has successfully highlighted the requirement to develop the proposed solution for the hosting company, by presenting the limitations of existing solutions and identifying key objectives to implement during the internship.\newline
+The next chapter discussed the key concepts that were researched to gain an outlook towards novel methods that will be implemented.

@@ -365,3 +365,26 @@ Executing the previous code resulted in the desired output.
     \caption{The generated answer from a RAG pipeline}
 \end{figure}\newline
 The response demonstrates how effective was the pipeline from transforming a long answer into a very accurate direct answer.
+\subsection{RAG metrics sorting}
+The sorting algorithm allows for better answers to be more accessible by placing them at the bottom of less accurate ones.
+To showcase how it affects the results page, here is a comparison between the positioning of generated answers from four different models (Claude 3.5 Sonnet, Command R+, Gemma-2 and Llama-3), from the previous example's question.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/app-question.png}
+    \caption{Prompting and retrieving context from the input question}
+\end{figure}\newpage
+After the context gets retrieved from the selected vector stores, the LLMs start generating answers based on its contents as shown below.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.8\linewidth]{./figures/app-answers.png}
+    \caption{Generated answers: not sorted}
+\end{figure}
+\newpage
+We can observe that the generated answers have clear differences. Some models perform better than others in certain cases, and this behavior alternates, meaning it is impossible to determine the best models for every use case. For this example, all the models generated relevant answers, but Claude and Gemma provided further accurate details. The results, however, are not sorted in any order, except the order of which the user has selected their preferred LLMs. It is possible that the more accurate responses get shadowed by less relevant ones (as the case with the Gemma-2 response in this example). Our goal for this app is to allow users to select the LLMs they prefer, while prioritizing better answers first automatically, which can be achieved by checking an option in the web interface to toggle the sorting algorithm.\newline
+The following figure demonstrates how the previous answers were sorted to prioritize answers with better quality.\newline
+The Gemma-2 and Claude-3.5 models performed better than the other 2 models, providing more information while still sticking to the retrieved context as factual information, while Llama-3 and Command R+ did not use the whole context and returned more succinct answers.\newline
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{./figures/app-answers-sorted.png}
+    \caption{Generated answers: sorted}
+\end{figure}
