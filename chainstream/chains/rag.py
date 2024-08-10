@@ -3,6 +3,10 @@ from chainstream.utils.documents import format_docs
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableParallel
 from langchain_core.output_parsers import StrOutputParser
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+from chainstream.models.utils import localize
 
 
 def answer(question: str, llm, vectorstore, template=None, prompt=None):
@@ -52,12 +56,20 @@ def answer(question: str, llm, vectorstore, template=None, prompt=None):
 
         chain = RunnableParallel(
             {
-                "context": vectorstore.as_retriever(
-                    search_type="similarity_score_threshold",
-                    search_kwargs={
-                        "k": 5,
-                        "score_threshold": 0.2,
-                    },
+                "context": ContextualCompressionRetriever(
+                    base_compressor=CrossEncoderReranker(
+                        model=HuggingFaceCrossEncoder(
+                            model_name=localize("BAAI/bge-reranker-base")
+                        ),
+                        top_n=5,
+                    ),
+                    base_retriever=vectorstore.as_retriever(
+                        search_type="similarity_score_threshold",
+                        search_kwargs={
+                            "k": 10,
+                            "score_threshold": 0.2,
+                        },
+                    ),
                 ),
                 "question": RunnablePassthrough(),
             }

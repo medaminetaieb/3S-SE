@@ -5,7 +5,9 @@ nest_asyncio.apply()
 
 
 def format_docs(docs) -> str:
-    return "\n\n".join(doc.page_content for doc in docs)
+    return f"\n{'-' * 100}\n".join(
+        [f"Document {i+1}:\n\n" + d.page_content for i, d in enumerate(docs)]
+    )
 
 
 def from_xml(file_path: str):

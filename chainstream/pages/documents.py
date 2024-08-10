@@ -94,6 +94,21 @@ def demo():
                 st.success("Vectorstore state saved", icon="✅")
             else:
                 st.error("Please authenticate your vectorstore first", icon="🚨")
+    if "w_vectorstore" in st.session_state:
+        st.subheader("Vector Store Contents")
+        for chunk in (
+            st.session_state["w_vectorstore"]
+            .index.as_retriever(
+                search_kwargs={
+                    "k": st.session_state["w_vectorstore"].index.index.ntotal
+                }
+            )
+            .invoke("A")
+        ):
+            with st.container(border=True):
+                st.json(chunk.metadata, expanded=True)
+                st.divider()
+                st.markdown(chunk.page_content)
     with st.sidebar:
         with st.form("auth"):
             vs_name = st.text_input(
@@ -117,6 +132,8 @@ def demo():
                             st.success("Authenticated", icon="✅")
                     except BaseException as e:
                         print(e)
+                        st.session_state["w_vectorstore"] = VectorStore(vs_name="_")
                         st.error("Failed to authenticate", icon="🚨")
                 else:
+                    st.session_state["w_vectorstore"] = VectorStore(vs_name="_")
                     st.error("Please enter credentials", icon="🚨")
