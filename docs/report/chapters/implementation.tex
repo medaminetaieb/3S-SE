@@ -228,13 +228,14 @@ A vector store initialization typically includes an embedding model initializati
 \end{figure}\newline
 The "snapshot\_download" function imported from "huggingface\_hub" ensures that the latest version of the model is available locally and can be loaded, while the implemented `load` function leverages it by loading the model on the GPU and falls back to the CPU when needed.\newpage
 \subsubsection{Retrieval and Similarity Search}
-In some cases where the knowledge base does not contain relevant information to the user query, naive RAG would retrieve the passages with the highest similarity score, even if its contents are not pertinent to the question. This issue is addressed by only including documents which scores attain a certain threshold, eliminating unnecessary passages thus reducing context size when prompting LLMs, and providing trustworthiness when no content can be found so the LLMs inform the user rather than introducing hallucination in generated answers.
+In some cases where the knowledge base does not contain relevant information to the user query, naive RAG would retrieve the passages with the highest similarity score, even if its contents are not pertinent to the question. This issue is addressed by only including documents whose scores attain a certain threshold, eliminating unnecessary passages thus reducing context size when prompting LLMs, and providing trustworthiness by informing the user when no content can be found rather than introducing hallucination in generated answers.\newline
+Moreover, the context returned from the "base\_retriever" is further processed to compress and re-order its contents through a "Cross Encoder Reranker" based on its relevance to the queries, which ensures that its size can fit the diverse LLMs.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{./figures/similarity_search_threshold.png}
+    \includegraphics[width=.9\linewidth]{./figures/similarity_search_threshold.png}
     \caption{Similarity Search Tuning}
     \begin{flushleft}
-        \small The score\_threshold parameter allows to set a value which only passage that has a higher score are passed to the LLM's context, eliminating irrelevant information and setting a limit on the maximum number of passages (k parameter set to 5). The choice of these values was based on experimentation and testing with different values, where some relevant information could be dismissed if the threshold was set to a higher value, and the risk of irrelevancy was significant if set to lower value.
+        \small The "score\_threshold" parameter allows to set a value which only passages that have a higher score are passed to the LLM's context, while the "k" parameter controls the maximum number of documents.\newline The "base\_compressor" allows to introduce a passage re-ranking and compression tool (bge-reranker), which further reduces the size of the retrieved context without losing information.
     \end{flushleft}
 \end{figure}\newline
 
@@ -249,12 +250,12 @@ As new products and cloud platforms are constantly emerging and changing rapidly
     \end{flushleft}
 \end{figure}\newline
 The list is much longer than this illustration, still it is easy to figure out how to add other LLMs and APIs as needed.\newline
-In addition to these APIs, this loading mechanism allows for flexible Prompt modification when different models require different prompts.\newpage
+In addition to these APIs, this loading mechanism allows for flexible Prompt modification when different models require different prompts.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{./figures/prompt-template-impl.png}
     \caption{Incorporating prompts into model definition.}
-\end{figure}
+\end{figure}\newline
 This approach allows to define a custom prompt template suitable for a specific model (such as in our case of Llama 3) from within a unified source code file. In theory, the "prompt" field can hold any f-string format (a concept in Python used to interpolate variables dynamically into a string), but the \href{https://smith.langchain.com/hub}{LangChain Hub} provides many example prompts for different tasks.
 \begin{figure}[htbp]
     \centering

@@ -142,9 +142,12 @@ def demo():
                 answrs.append({"llm_key": llm_key, "answer": answr})
             except BaseException as e:
                 print(e)
-        st.chat_message("assistant").write(
-            f'Answering from retrieved context:\n{format_docs(answrs[0]["answer"]["context"])}'
-        )
+        with st.chat_message("assistant"):
+            st.write("Answering from retrieved context :")
+            for chunk in answrs[0]["answer"]["context"]:
+                with st.container(border=True):
+                    st.json(chunk.metadata, expanded=False)
+                    st.markdown(chunk.page_content)
         for answr in reranked(
             answers=answrs,
             embeddings=(
