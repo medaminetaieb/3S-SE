@@ -1,4 +1,8 @@
-from typing import Set, List
+from typing import List
+from langchain_core.documents import Document
+from uuid import uuid4
+from itertools import groupby
+from operator import itemgetter
 import nest_asyncio
 
 nest_asyncio.apply()
@@ -10,12 +14,29 @@ def format_docs(docs) -> str:
     )
 
 
+def reconstructed_documents(docs: List[Document]):
+    sorted_docs = sorted(
+        docs, key=lambda doc: (doc.metadata["rec_id"], doc.metadata["rec_order"])
+    )
+    grouped_docs = {}
+    for key, group in groupby(sorted_docs, key=lambda doc: doc.metadata["rec_id"]):
+        grouped_docs[key] = list(group)
+    return grouped_docs
+
+
+def attach_reconstruction_metadata(docs: List[Document]) -> List[Document]:
+    rec_id = uuid4()
+    for i, _ in enumerate(docs):
+        docs[i].metadata["rec_id"], docs[i].metadata["rec_order"] = rec_id, i
+    return docs
+
+
 def from_xml(file_path: str):
     from langchain_community.document_loaders import UnstructuredXMLLoader
 
     loader = UnstructuredXMLLoader(file_path)
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_epub(file_path: str):
@@ -23,7 +44,7 @@ def from_epub(file_path: str):
 
     loader = UnstructuredEPubLoader(file_path, mode="elements")
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_txt(file_path: str):
@@ -31,7 +52,7 @@ def from_txt(file_path: str):
 
     loader = TextLoader(file_path, autodetect_encoding=True)
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_md(file_path: str):
@@ -39,7 +60,7 @@ def from_md(file_path: str):
 
     loader = UnstructuredMarkdownLoader(file_path)
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_pdf(file_path: str):
@@ -47,7 +68,7 @@ def from_pdf(file_path: str):
 
     loader = PyMuPDFLoader(file_path)
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_docx(file_path: str):
@@ -55,7 +76,7 @@ def from_docx(file_path: str):
 
     loader = Docx2txtLoader(file_path)
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_pptx(file_path: str):
@@ -63,7 +84,7 @@ def from_pptx(file_path: str):
 
     loader = UnstructuredPowerPointLoader(file_path, mode="elements")
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_pdf_url(url: str):
@@ -74,7 +95,7 @@ def from_pdf_url(url: str):
     with tempfile.NamedTemporaryFile(delete=True) as temp_file:
         temp_file.write(response.content)
         docs = from_pdf(temp_file.name)
-        return docs
+        return attach_reconstruction_metadata(docs)
 
 
 def from_url(url: str, enable_js=False):
@@ -88,14 +109,14 @@ def from_url(url: str, enable_js=False):
             headless=True,
         )
         docs = loader.load_and_split()
-        return docs
+        return attach_reconstruction_metadata(docs)
     from langchain_community.document_loaders.async_html import AsyncHtmlLoader
     from langchain_community.document_transformers import Html2TextTransformer
 
     loader = AsyncHtmlLoader(url)
     docs = loader.load_and_split()
     docs_transformed = Html2TextTransformer().transform_documents(docs)
-    return docs_transformed
+    return attach_reconstruction_metadata(docs_transformed)
 
 
 def from_recursive_url(url_parts: List[str]):
@@ -112,7 +133,7 @@ def from_recursive_url(url_parts: List[str]):
         autoset_encoding=True,
     )
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_youtube_url(url: str):
@@ -120,7 +141,7 @@ def from_youtube_url(url: str):
 
     loader = YoutubeLoader.from_youtube_url(url, add_video_info=True)
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_arxiv_url(url: str):
@@ -128,7 +149,7 @@ def from_arxiv_url(url: str):
 
     loader = ArxivLoader(query=url.split("/")[-1], load_max_docs=2)
     docs = loader.load_and_split()
-    return docs
+    return attach_reconstruction_metadata(docs)
 
 
 def from_research(query: str):
@@ -145,9 +166,9 @@ def from_research(query: str):
         )
         docs = RecursiveCharacterTextSplitter().create_documents(
             texts=[research_data_task.report],  # Access report from research_data_task
-            metadatas=[{"source": "GPTResearcher"}],
+            metadatas=[{"source": f"GPTResearcher: {query}"}],
         )
-        return docs
+        return attach_reconstruction_metadata(docs)
     except BaseException as e:
         print(e)
     finally:

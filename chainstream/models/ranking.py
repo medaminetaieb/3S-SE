@@ -4,7 +4,7 @@ from typing import List, Dict
 from datasets import Dataset
 from ragas import evaluate
 from ragas.metrics import (
-    faithfulness,
+    FaithulnesswithHHEM,
     answer_relevancy,
 )
 
@@ -65,7 +65,7 @@ def calc_score(question, answer, contexts, embeddings, llm) -> float:
         scores = evaluate(
             metrics_data,
             metrics=[
-                faithfulness,
+                FaithulnesswithHHEM(),
                 answer_relevancy,
             ],
             embeddings=embeddings,

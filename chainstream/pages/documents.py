@@ -17,6 +17,7 @@ def demo():
         from_md,
         from_xml,
         from_epub,
+        reconstructed_documents,
     )
     from chainstream.utils.web import (
         is_pdf_link,
@@ -90,13 +91,15 @@ def demo():
                         logging.error(f"Error processing file: {e}")
             if len(docs) > 0:
                 st.session_state["w_vectorstore"].index.add_documents(docs)
-            if st.session_state["w_vectorstore"].save_state():
-                st.success("Vectorstore state saved", icon="✅")
+                if st.session_state["w_vectorstore"].save_state():
+                    st.success("Vectorstore state saved", icon="✅")
+                else:
+                    st.error("Please authenticate your vectorstore first", icon="🚨")
             else:
-                st.error("Please authenticate your vectorstore first", icon="🚨")
+                st.error("Please add documents to index first")
     if "w_vectorstore" in st.session_state:
         st.subheader("Vector Store Contents")
-        for chunk in (
+        for doc_chunks in reconstructed_documents(
             st.session_state["w_vectorstore"]
             .index.as_retriever(
                 search_kwargs={
@@ -104,11 +107,12 @@ def demo():
                 }
             )
             .invoke("A")
-        ):
+        ).values():
             with st.container(border=True):
-                st.json(chunk.metadata, expanded=True)
+                st.json(doc_chunks[0].metadata, expanded=True)
                 st.divider()
-                st.markdown(chunk.page_content)
+                for chunk in doc_chunks:
+                    st.markdown(chunk.page_content)
     with st.sidebar:
         with st.form("auth"):
             vs_name = st.text_input(

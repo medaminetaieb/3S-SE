@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from typing import List, Dict, Optional
 from langchain_community.vectorstores import FAISS
 from chainstream.models import embeddings
+from uuid import uuid4
 
 
 class VectorStore:
@@ -35,8 +36,9 @@ class VectorStore:
             )
         except BaseException as e:
             self.index = FAISS.from_texts(
-                ["Standard Sharing Software"],
-                self.embeddings,
+                texts=["Standard Sharing Software"],
+                metadatas=[{"rec_id": uuid4(), "rec_order": 1}],
+                embedding=self.embeddings,
             )
 
     def save_state(self) -> bool:
