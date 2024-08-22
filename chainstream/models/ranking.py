@@ -6,6 +6,14 @@ from ragas import evaluate
 from ragas.metrics import (
     FaithulnesswithHHEM,
     answer_relevancy,
+    context_utilization,
+)
+from ragas.metrics.critique import (
+    harmfulness,
+    maliciousness,
+    coherence,
+    correctness,
+    conciseness,
 )
 
 
@@ -67,17 +75,20 @@ def calc_score(question, answer, contexts, embeddings, llm) -> float:
             metrics=[
                 FaithulnesswithHHEM(),
                 answer_relevancy,
+                context_utilization,
+                harmfulness,
+                maliciousness,
+                coherence,
+                correctness,
+                conciseness,
             ],
             embeddings=embeddings,
             llm=llm,
         )
-        s = float(1)
-        for metric in ["faithfulness", "answer_relevancy"]:
-            s *= scores[metric]
-        return s
+        return sum(scores.values())
     except BaseException as e:
         print(e)
-        return float(1)
+        return float(0)
 
 
 def reranked(answers: List[Dict], embeddings=None, config=None) -> List[Dict]:
@@ -90,7 +101,7 @@ def reranked(answers: List[Dict], embeddings=None, config=None) -> List[Dict]:
                 embeddings=embeddings,
                 llm=config["llms"][answer["llm_key"]]["model"],
             )
-            * calc_score_from_feedback(answer["llm_key"])
+            + calc_score_from_feedback(answer["llm_key"])
             for answer in answers
         ]
     else:
