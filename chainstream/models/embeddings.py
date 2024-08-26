@@ -5,6 +5,7 @@ from torch import cuda
 from langchain_huggingface import HuggingFaceEmbeddings
 from chainstream.models.utils import localize
 
+
 def load(model_name="sentence-transformers/all-mpnet-base-v2", prefer_cuda=True):
     load_dotenv()
     # freeze_support()
@@ -12,15 +13,21 @@ def load(model_name="sentence-transformers/all-mpnet-base-v2", prefer_cuda=True)
     try:
         return HuggingFaceEmbeddings(
             model_name=model_path,
+            show_progress=True,
             # multi_process=True,
             model_kwargs={
-                "device": f"cuda:{cuda.current_device()}" if prefer_cuda and cuda.is_available() else "cpu"
+                "device": (
+                    f"cuda:{cuda.current_device()}"
+                    if prefer_cuda and cuda.is_available()
+                    else "cpu"
+                )
             },
             encode_kwargs={"normalize_embeddings": True},
         )
     except cuda.OutOfMemoryError as e:
         return HuggingFaceEmbeddings(
             model_name=model_path,
+            show_progress=True,
             # multi_process=True,
             model_kwargs={
                 "device": "cpu",

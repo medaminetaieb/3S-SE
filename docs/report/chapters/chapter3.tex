@@ -143,8 +143,9 @@ This final post-generation phase process aims to prioritize better answers by ca
 \subsubsection{Faithfulness}
 This metric allows to measure the hallucination of a model and de-prioritizes its answer. It achieves this by calculating the proportion of the claims which can be inferred from the retrieved context against the total number of claims, which can be either from the context or not (hallucination).
 \subsubsection{Answer Relevancy}
-
+Similarly to the Faithfulness metric, which focuses on the generated answer its relation with the retrieved context, this metric assesses the pertinence of the generation phase's outcome to the initial prompt. This metric is calculated by reverse engineering the RAG pipeline: Given a generated answer, LLMs attempt to speculate some variants of questions that can be asked to obtain that generation, and then calculates the mean cosine similarity between those speculated questions and the actual question.
 \subsubsection{Model Feedback}
+This metric allows to capture the users' feedback and measure the trust our users have in AI models. It measures this by allowing each user to rate an answer in a scale from 1 to 5. These accumulated scores are then divided by the number of feedbacks given to a single LLM. In addition to this, a model which has no feedback is given a score of 3 to make it neither prioritized nor de-prioritized  over other models.
 
 \section{Conclusion}
 This chapter has identified the key components that will make up our system, highlighting the interaction between them. In summary, to implement a functional RAG pipeline, one needs to orchestrate a Vector Store with methods for knowledge augmentation, similarity search methods to retrieve relevant information, LLMs to generate responses, and prompt engineering to control LLMs' behavior.\newline

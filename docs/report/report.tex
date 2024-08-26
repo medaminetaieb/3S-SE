@@ -1,6 +1,7 @@
 \documentclass[12pt,a4paper]{report}
 
-\usepackage[utf8x]{inputenc}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{mathptmx}
 \usepackage{pifont}
 \usepackage{amsmath}
@@ -15,6 +16,10 @@
 \usepackage{subcaption}
 \usepackage{fancyhdr}
 \usepackage{float}
+\usepackage{titlesec}
+\usepackage{sectsty}
+\usepackage{tocloft}
+\usepackage{lipsum}
 
 \hypersetup{
 colorlinks=true,
@@ -27,8 +32,17 @@ linkcolor=black
 \fancyhead{\nouppercase{\rightmark\hfill\leftmark}}
 \fancyfoot[L,R]{\hfill\thepage\hfill}
 \setlength{\headheight}{15pt}
+\titleformat{\chapter}[display]{\normalfont\Large\bfseries}{Chapter \thechapter}{20pt}{\uppercase}
+\setlength{\cftchapnumwidth}{2.2cm}
+\setlength{\cftfignumwidth}{2.2cm}
+\setlength{\cfttabnumwidth}{2.2cm}
+\renewcommand{\cftchappresnum}{Chapter }
+\renewcommand{\cftfigpresnum}{Figure }
+\renewcommand{\cfttabpresnum}{Table }
+\renewcommand{\figurename}{FIGURE}
+\renewcommand{\tablename}{TABLE}
 \renewcommand{\contentsname}{Table of Contents}
-\renewcommand*\abstractname{General Introduction}
+\renewcommand{\abstractname}{General Introduction}
 
 \begin{document}
 
@@ -41,7 +55,7 @@ linkcolor=black
 \listoffigures
 \listoftables
 
-\include{./chapters/abbreviations.tex}
+\include{./chapters/glossary.tex}
 
 \include{./chapters/abstract.tex}
 
@@ -53,9 +67,11 @@ linkcolor=black
 
 \include{./chapters/chapter4.tex}
 
+\include{./chapters/chapter5.tex}
+
 \include{./chapters/conclusion.tex}
 
-\include{./chapters/references.tex}
+\include{./chapters/bibliography.tex}
 
 \includepdf[pages={2}]{./pdfs/Page Garde Rapport Stage(Ang) 2.pdf}
 

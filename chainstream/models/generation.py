@@ -6,19 +6,28 @@ def phi3(prefer_cuda=True):
     torch.random.manual_seed(0)
 
     model_path = localize("microsoft/Phi-3-mini-4k-instruct")
-    tokenizer = AutoTokenizer.from_pretrained(model_path, legacy=False)
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path=model_path,
+        local_files_only=True,
+        clean_up_tokenization_spaces=True,
+        legacy=False,
+    )
     try:
         model = AutoModelForCausalLM.from_pretrained(
-            model_path,
-            device_map="auto" if prefer_cuda and torch.cuda.is_available() else "cpu", 
-            torch_dtype="auto", 
-            trust_remote_code=True, 
+            pretrained_model_name_or_path=model_path,
+            local_files_only=True,
+            clean_up_tokenization_spaces=True,
+            device_map="auto" if prefer_cuda and torch.cuda.is_available() else "cpu",
+            torch_dtype="auto",
+            trust_remote_code=True,
         )
     except torch.cuda.OutOfMemoryError as e:
         model = AutoModelForCausalLM.from_pretrained(
-            model_path, 
-            torch_dtype="auto", 
-            trust_remote_code=True, 
+            pretrained_model_name_or_path=model_path,
+            local_files_only=True,
+            clean_up_tokenization_spaces=True,
+            torch_dtype="auto",
+            trust_remote_code=True,
         )
 
     pipe = pipeline(
@@ -29,8 +38,14 @@ def phi3(prefer_cuda=True):
     return pipe
 
     messages = [
-        {"role": "user", "content": "Can you provide ways to eat combinations of bananas and dragonfruits?"},
-        {"role": "assistant", "content": "Sure! Here are some ways to eat bananas and dragonfruits together: 1. Banana and dragonfruit smoothie: Blend bananas and dragonfruits together with some milk and honey. 2. Banana and dragonfruit salad: Mix sliced bananas and dragonfruits together with some lemon juice and honey."},
+        {
+            "role": "user",
+            "content": "Can you provide ways to eat combinations of bananas and dragonfruits?",
+        },
+        {
+            "role": "assistant",
+            "content": "Sure! Here are some ways to eat bananas and dragonfruits together: 1. Banana and dragonfruit smoothie: Blend bananas and dragonfruits together with some milk and honey. 2. Banana and dragonfruit salad: Mix sliced bananas and dragonfruits together with some lemon juice and honey.",
+        },
         {"role": "user", "content": "What about solving an 2x + 3 = 7 equation?"},
     ]
 
@@ -42,4 +57,4 @@ def phi3(prefer_cuda=True):
     }
 
     output = pipe(messages, **generation_args)
-    print(output[0]['generated_text'])
+    print(output[0]["generated_text"])

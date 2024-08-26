@@ -9,6 +9,7 @@ streamlit-feedback
 ragas
 langchain
 langchainhub
+langsmith
 langchain-community
 langchain-anthropic
 langchain-fireworks
@@ -35,6 +36,8 @@ arxiv
 pytube
 pandoc
 beautifulsoup4
+crcmod
+google-crc32c
 duckduckgo-search
 faiss-cpu
 huggingface-hub
