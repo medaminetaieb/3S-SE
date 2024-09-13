@@ -53,7 +53,7 @@ This framework has all the required components to build the most advanced RAG pi
 \begin{figure}[H]
     \centering
     \includegraphics[width=.45\linewidth]{./figures/langchain-components.png}
-    \caption{LangChain Components. (\href{https://python.langchain.com/v0.1/docs/modules/}{LangChain Documentation})}
+    \caption{LangChain Components \cite{langchainmodules}}
 \end{figure}
 \subsection{Large Language Models}
 There is a plethora of models of this type, both closed and open source, with many ways to access and use them.
@@ -62,16 +62,16 @@ Many open-source LLM variants are available on Hugging Face Models Hub, as it is
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\linewidth]{./figures/hf-logo.png}
-    \caption{Hugging Face logo. \href{https://huggingface.co/models}{[Hugging Face models Hub]}}
+    \caption{Hugging Face logo.}
 \end{figure}
 \begin{quote}
-    "The Hugging Face Hub hosts many models for a \href{https://huggingface.co/tasks}{variety of machine learning tasks}. Models are stored in repositories, so they benefit from \href{https://huggingface.co/docs/hub/repositories}{all the features} possessed by every repo on the Hugging Face Hub. Additionally, model repos have attributes that make exploring and using models as easy as possible."  (\href{https://huggingface.co/docs/hub/models}{[Hugging Face Models Hub documentation]}, 2024)
+    "The Hugging Face Hub hosts many models for a \href{https://huggingface.co/tasks}{variety of machine learning tasks}. Models are stored in repositories, so they benefit from \href{https://huggingface.co/docs/hub/repositories}{all the features} possessed by every repo on the Hugging Face Hub. Additionally, model repos have attributes that make exploring and using models as easy as possible."  \cite{hfmhdocs}
 \end{quote}
 We can find an abundance of pre-trained LLMs downloadable from the HF Hub.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.85\linewidth]{./figures/hf-models.png}
-    \caption{HF Hub models, categorized by their tasks. \href{https://huggingface.co/models}{[Models - Hugging Face]}}
+    \caption{HF Hub models, categorized by their tasks \cite{hfmodels}}
 \end{figure}
 This method allows the free utilization of a pre-trained model without being confined to cloud-platforms and their plans.
 \subsubsection{Cloud-based Solutions}
@@ -80,7 +80,7 @@ This method, in contrast to running models locally, does not come with the pre-r
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/langchain-llm-integrations.png}
-    \caption{LangChain Integrations with LLMs cloud providers. \href{https://python.langchain.com/v0.1/docs/integrations/llms/}{[Langchain Documentation - LLMs]}}
+    \caption{LangChain Integrations with LLMs cloud providers \cite{langchainllmintegrations}}
     \begin{flushleft}
         \small The previous list presents a subset of the integrations provided by Langchain. In addition to the aforementioned items, MistralAI and GrokCloud were integrated in the system to provide a plethora of Large Language Models suitable for Retrieval-augmented Generation. This solution also allows for some customization options through their web interfaces and API function parameters, even though limited when compared to local implementation.
     \end{flushleft}
@@ -88,7 +88,7 @@ This method, in contrast to running models locally, does not come with the pre-r
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/togetherai-playground.png}
-    \caption{TogetherAI playground web interface. \href{https://api.together.ai/playground}{TogetherAI Playground service}}
+    \caption{TogetherAI playground web interface \cite{togetheraipg}}
     \begin{flushleft}
         This figure demonstrates an example of a cloud-based environment providing multiple LLM's customization options and parameters, allowing to customize and use a Llama model without locally downloading it.
     \end{flushleft}
@@ -129,19 +129,19 @@ This redirects us to the Hugging Face Hub where we can find many embedding model
 \begin{figure}[H]
     \centering
     \includegraphics[width=.85\linewidth]{./figures/hf-embedding-models.png}
-    \caption{A list of Embedding models from HF Hub. \href{https://huggingface.co/models?pipeline_tag=sentence-similarity&sort=likes}{Models | Hugging Face}}
+    \caption{A list of Embedding models from HF Hub \cite{hfmodels}}
 \end{figure}
 This list contains two of the most popular choices, which are "all-MiniLM-L12-v2" and "all-mpnet-base-v2", the first of which makes a better choice when working in a limited environment while not paying much attention to retaining semantics (faster embedding generation and smaller size), while the second one, "all-mpnet-base-v2", is the more suitable choice for our case due to, even with its larger footprint, its capability to capture most of the semantics and meanings of sentences.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/embedding-modes-performance.png}
-    \caption{Sentence-Tansformers model performance comparison \href{https://sbert.net/docs/sentence_transformer/pretrained_models.html}{[Pre-Trained Sentence Transformers models' performance]}}
+    \caption{Sentence-Tansformers model performance comparison \cite{sbertsentencetrans}}
     \begin{flushleft}
         This table provides an overview of an extensive evaluation for the quality of a number of embeddings models. These models are ranked based on many metrics: performance of encoding generation over diverse domains, semantic search, speed and size.
     \end{flushleft}
 \end{figure}
 \begin{quote}
-    "The all-* models were trained on all available training data (more than 1 billion training pairs) and are designed as general purpose models. The all-mpnet-base-v2 model provides the best quality, while all-MiniLM-L6-v2 is 5 times faster and still offers good quality."  (\href{https://sbert.net/docs/sentence_transformer/pretrained_models.html}{[Sentence Transformers documentation]})
+    "The all-* models were trained on all available training data (more than 1 billion training pairs) and are designed as general purpose models. The all-mpnet-base-v2 model provides the best quality, while all-MiniLM-L6-v2 is 5 times faster and still offers good quality."  \cite{sbertsentencetrans}
 \end{quote}
 
 \section{Incorporating into a RAG System}

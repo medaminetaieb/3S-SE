@@ -16,7 +16,7 @@ The RAG process has significantly improved on the limitations of generative AI m
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/RAG_FrameCompre_eng.png}
-    \caption{Comparison between the three paradigms of RAG: Naive, Advanced and Modular RAG. (\href{https://arxiv.org/html/2312.10997v5}{[Retrieval-Augmented Generation for Large Language Models: A Survey]}, March 2024)}
+    \caption{Comparison between the three paradigms of RAG: Naive, Advanced and Modular RAG \cite{ragforllmsasurvey}}
     \begin{flushleft}
         \small Naive RAG (LEFT)  mainly consists of three parts: indexing, retrieval and generation. Advanced RAG (MIDDLE) proposes multiple optimization strategies around pre-retrieval and post-retrieval, with a process similar to the Naive RAG, still following a chain-like structure. Modular RAG (RIGHT) is not limited to sequential retrieval and generation; it includes methods such as iterative and adaptive retrieval.
     \end{flushleft}
@@ -47,7 +47,7 @@ The following subsections are dedicated to the exploration of these elements and
 \begin{quote}
     "Traditional databases are made up of structured tables containing symbolic information. For example, an image collection would be represented as a table with one row per indexed photo. Each row contains information such as an image identifier and descriptive text. Rows can be linked to entries from other tables as well, such as an image with people in it being linked to a table of names.
 
-    AI tools, like text embedding (word2vec) or convolutional neural network (CNN) descriptors trained with deep learning, generate high-dimensional vectors. These representations are much more powerful and flexible than a fixed symbolic representation, as we’ll explain in this post. Yet traditional databases that can be queried with SQL are not adapted to these new representations. First, the huge inflow of new multimedia items creates billions of vectors. Second, and more importantly, finding similar entries means finding similar high-dimensional vectors, which is inefficient if not impossible with standard query languages."  (\href{https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/}{[Faiss: A library for efficient similarity search]}, 2017)
+    AI tools, like text embedding (word2vec) or convolutional neural network (CNN) descriptors trained with deep learning, generate high-dimensional vectors. These representations are much more powerful and flexible than a fixed symbolic representation, as we’ll explain in this post. Yet traditional databases that can be queried with SQL are not adapted to these new representations. First, the huge inflow of new multimedia items creates billions of vectors. Second, and more importantly, finding similar entries means finding similar high-dimensional vectors, which is inefficient if not impossible with standard query languages."  \cite{faissess}
 \end{quote}
 This specific type of database provides many functionalities and processes pertinent to the functioning of a RAG pipeline, which are explored in the following subsections.
 \subsection{Chunking}
@@ -66,7 +66,7 @@ Embedding vectors, as in vector store, are arrays of floating-point numbers prod
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/vectorstore.jpg}
-    \caption{Vector Store Process Diagram. \href{https://python.langchain.com/v0.1/docs/modules/data_connection/vectorstores/}{[LangChain Documentation]}}
+    \caption{Vector Store Process Diagram \cite{langchainvectorstore}}
     \begin{flushleft}
         \small This figure illustrates the functioning of an embedding model in a vector store environment, transforming source data to numerical representations, and embedding queries to retrieve the most similar vectors.
     \end{flushleft}
@@ -76,7 +76,7 @@ The term indexation refers to the organization and storage of the generated embe
 \begin{figure}[H]
     \centering
     \includegraphics[width=.5\linewidth]{./figures/vs-indexation.png}
-    \caption{Vector Store Index Visualization. \href{https://weaviate.io/developers/weaviate/concepts/vector-index}{[Vector Indexing | Weaviate]}}
+    \caption{Vector Store Index Visualization \cite{weaviateindexing}}
     \begin{flushleft}
         \small This figure demonstrates how some word embeddings are indexed so that semantically similar elements are grouped together.
     \end{flushleft}
@@ -87,7 +87,7 @@ The following figure represents the different metrics of these algorithms.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/vector-distance-metrics.png}
-    \caption{Similarity Metrics for Vector Search. \href{https://zilliz.com/blog/similarity-metrics-for-vector-search}{[Zilliz Blog]}}
+    \caption{Similarity Metrics for Vector Search \cite{zsimilaritymetrics}}
 \end{figure}
 The Euclidean Distance metric is more suitable when looking for precise differences in numerical values, achieving results similar to exact word matching, which is irrelevant in the context of RAG. The Inner Product metric is more advanced in a way that it focuses on calculating the difference between the vectors' directions more than their magnitudes, but still it prioritizes results with similar lengths to the input query. The cosine similarity metric, which is the most suitable algorithm for our case, only calculates similarity based on the direction of vectors rather than their magnitude, which means that the embeddings which will be retrieved from the knowledge base will be the ones with the most semantic similarity, rather than length similarity, to the user-provided query embeddings.
 \subsection{Retrieval Re-ranking}
@@ -95,7 +95,7 @@ Considering the context window limitation mentioned in the chunking subsection, 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.8\linewidth]{./figures/Bi_vs_Cross-Encoder.png}
-    \caption{Bi-encoder VS Cross-encoder. \href{https://www.sbert.net/examples/applications/cross-encoder/README.html}{[Cross-Encoders - Sentence Transformers documentation]}}
+    \caption{Bi-encoder VS Cross-encoder \cite{bivscrossencoders}}
 \end{figure}
 The post-retrieval process being discussed allows to compress the retrieved information from the basic similarity search algorithm by employing a neural network to further re-rank and drop irrelevant or recurrent parts from the retrieved information. This type of neural network, called Cross-Encoder Re-ranking, captures the order and relationships between the words in the query and the given chunk simultaneously, and predicts its relevance to the question.
 \subsection{Large Language Models}
@@ -104,7 +104,7 @@ Large Language Models (LLMs) constitute a subset of AI models that leverage mass
 \begin{figure}[H]
     \centering
     \includegraphics[width=.97\linewidth]{./figures/genai-relation-diagram.png}
-    \caption{Relationship between AI, ML, DL, NLP, and Conversational AI terms. \href{https://blog.miarec.com/contact-centers-ai-definition}{[miarec]}}
+    \caption{Relationship between AI, ML, DL, NLP, and Conversational AI terms \cite{aidomainsrel}}
     \begin{flushleft}
         \small This figure illustrates the relationship between AI domains. In this project, our focus is more onto LLMs (we use the term "LLM" interchangeably to mean "Large Language Model" that may or may not be "Conversational AI"), which are ML models able to hold chat history when answering consecutive queries.
     \end{flushleft}
@@ -113,7 +113,7 @@ LLMs represent the principal component of a RAG system. It acts as tool that und
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{./figures/The-Transformer-model-architecture.png}
-    \caption{An illustration of main components of the transformer model from the original paper. \href{https://arxiv.org/abs/2002.04745}{[On Layer Normalization in the Transformer Architecture (2020)]}}
+    \caption{An illustration of main components of the transformer model from the original paper \cite{transformersarch}}
 \end{figure}
 To provide some cursory understanding of the functioning of these models, the following are the main steps that such architecture involves:
 \begin{itemize}
@@ -131,7 +131,7 @@ Prompt Engineering (PE) techniques play a crucial rule in the context of RAG and
     \centering
     \includegraphics[width=\linewidth]{./figures/prompt-types.png}
     \caption{Types of Prompts: [X]: context, [Y]: Abbreviation, [Z]: Expanded Form
-    (\href{https://www.oajaiml.com/uploads/archivepdf/63501191.pdf}{[A Study on the Implementation of Generative AI Services Using an Enterprise Data-Based LLM Application Architecture]}, 2023)}
+    \cite{prompts}}
     \begin{flushleft}
         The figure above provides many types and examples of prompts. We can distinguish two characteristics: instructions and placeholders.\newline
         Instructions, such as "Given the context [], Determine the meaning of []" and "Determine the meaning of [] in the given context []", allow to control how the AI model processes its input when generating answers, and help instruct the model to limit its knowledge based on the retrieved context for our case.\newline
