@@ -109,10 +109,10 @@ def demo():
         links.discard("NA")
         for url in links:
             st.session_state["r_vectorstore"].add_documents(from_url(url))
-        if gptresearcher:
-            docs = from_research(q)
-            if docs is not None and len(docs) > 0:
-                st.session_state["r_vectorstore"].add_documents(docs)
+        #if gptresearcher:
+            #docs = from_research(q)
+            #if docs is not None and len(docs) > 0:
+                #st.session_state["r_vectorstore"].add_documents(docs)
         answrs = []
         for llm_key in [
             model_keys[model_options.index(model_name)] for model_name in llms
