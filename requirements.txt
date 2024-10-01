@@ -14,6 +14,7 @@ langchain-community
 langchain-anthropic
 langchain-fireworks
 langchain-openai
+langchain-huggingface
 openai
 langchain-google-vertexai
 langchain-google-community
