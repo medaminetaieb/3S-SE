@@ -8,14 +8,6 @@ from ragas.metrics import (
     answer_relevancy,
     context_utilization,
 )
-from ragas.metrics.critique import (
-    harmfulness,
-    maliciousness,
-    coherence,
-    correctness,
-    conciseness,
-)
-
 
 def submit_feedback(feedback_response, llm_key: str) -> bool:
     fb = get_feedback()
@@ -76,11 +68,6 @@ def calc_score(question, answer, contexts, embeddings, llm) -> float:
                 FaithulnesswithHHEM(),
                 answer_relevancy,
                 context_utilization,
-                harmfulness,
-                maliciousness,
-                coherence,
-                correctness,
-                conciseness,
             ],
             embeddings=embeddings,
             llm=llm,
